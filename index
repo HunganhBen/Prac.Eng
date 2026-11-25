@@ -1,0 +1,3443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luyện Nghe & Chép Chính Tả Tiếng Anh Lớp 6</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- jsQR CDN để quét mã QR từ ảnh chụp sách -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#2563eb',
+              700: '#0f4c81',
+              800: '#0c3e6b',
+              900: '#092e50',
+            },
+            accent: {
+              500: '#f97316',
+              600: '#ea580c',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Typography tối ưu để học sinh lớp 6 dễ nhìn đề khi chép ra vở */
+    .passage-text {
+      font-size: 18px;
+      line-height: 2.15;
+      letter-spacing: 0.01em;
+    }
+
+    @media (min-width: 768px) {
+      .passage-text {
+        font-size: 19.5px;
+        line-height: 2.25;
+      }
+    }
+
+    .blank-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #F0F7FF;
+      border: 1.5px solid #93C5FD;
+      color: #0F4C81;
+      font-weight: 700;
+      padding: 1px 10px;
+      margin: 0 3px;
+      border-radius: 8px;
+      font-size: 0.92em;
+      line-height: 1.5;
+      vertical-align: baseline;
+      box-shadow: 0 1px 2px rgba(15, 76, 129, 0.06);
+    }
+
+    .blank-pill .blank-num {
+      background-color: #0F4C81;
+      color: #FFFFFF;
+      font-size: 0.78em;
+      padding: 0 6px;
+      border-radius: 5px;
+      font-weight: 800;
+    }
+
+    .inline-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 2px 4px;
+      vertical-align: baseline;
+    }
+
+    .inline-input {
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0F172A;
+      background-color: #FFFFFF;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+
+    .inline-input:focus {
+      outline: none;
+      border-color: #0F4C81;
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+    }
+
+    .inline-input.correct {
+      border-color: #059669;
+      background-color: #ECFDF5;
+      color: #065F46;
+    }
+
+    .inline-input.incorrect {
+      border-color: #DC2626;
+      background-color: #FEF2F2;
+      color: #991B1B;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Toast Thông báo -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-[calc(100%-2rem)] pointer-events-none"></div>
+
+  <!-- Header & Thanh điều hướng 3 Tab chính -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 pt-3 pb-0">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3">
+        <!-- Logo & Tiêu đề -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center shadow-sm shrink-0">
+            <i class="fa-solid fa-headphones-simple text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
+              Luyện Nghe & Chép Chính Tả
+            </h1>
+            <p class="text-xs text-slate-500 font-medium">Tiếng Anh Lớp 6 • Quét QR Video – Chia đoạn – Chấm vở AI</p>
+          </div>
+        </div>
+
+        <!-- Nút mở modal tạo bài mới từ nhiều ảnh sách & Trạng thái đồng bộ -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <span id="syncStatusPill" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-600">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span>Lưu trên máy</span>
+          </span>
+
+          <button
+            id="openCreateFromImagesBtn"
+            type="button"
+            class="flex-1 sm:flex-initial justify-center px-4 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-600 active:scale-[0.99] text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-camera text-base"></i>
+            <span>📸 Tạo bài mới từ ảnh sách</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Tab Điều Hướng Chính -->
+      <nav class="grid grid-cols-3 gap-1 sm:gap-2 border-t border-slate-100 pt-1">
+        <button
+          id="navPracticeBtn"
+          type="button"
+          class="nav-main-btn py-2.5 px-2 text-xs sm:text-sm font-extrabold border-b-2 transition flex items-center justify-center gap-1.5"
+        >
+          <i class="fa-solid fa-pen-nib"></i>
+          <span>Luyện tập</span>
+        </button>
+        <button
+          id="navProgressBtn"
+          type="button"
+          class="nav-main-btn py-2.5 px-2 text-xs sm:text-sm font-extrabold border-b-2 transition flex items-center justify-center gap-1.5"
+        >
+          <i class="fa-solid fa-chart-column"></i>
+          <span>📊 Tiến bộ của con</span>
+        </button>
+        <button
+          id="navSettingsBtn"
+          type="button"
+          class="nav-main-btn py-2.5 px-2 text-xs sm:text-sm font-extrabold border-b-2 transition flex items-center justify-center gap-1.5"
+        >
+          <i class="fa-solid fa-gear"></i>
+          <span>⚙️ Cài đặt & Sync</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======================================================================= -->
+  <!-- VIEW 1: LUYỆN TẬP NGHE & CHÉP CHÍNH TẢ                                   -->
+  <!-- ======================================================================= -->
+  <main id="viewPractice" class="flex-1 max-w-5xl w-full mx-auto px-4 py-5 space-y-5">
+
+    <!-- Thanh chọn bài học đã lưu -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-50 text-brand-700 shrink-0">
+            <i class="fa-solid fa-book-open"></i>
+          </span>
+          <div class="min-w-0 flex-1">
+            <label for="lessonSelect" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Bài học đang luyện tập
+            </label>
+            <select
+              id="lessonSelect"
+              class="mt-0.5 w-full font-bold text-slate-800 text-sm sm:text-base bg-transparent focus:outline-none cursor-pointer truncate pr-4"
+            ></select>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+          <span id="lessonMetaBadge" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-600">
+            4 đoạn văn
+          </span>
+          <button
+            id="openManualModalBtn"
+            type="button"
+            class="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold transition flex items-center gap-1"
+            title="Sửa văn bản, link video hoặc dán bài học mới"
+          >
+            <i class="fa-regular fa-pen-to-square"></i>
+            <span>Sửa bài / Link</span>
+          </button>
+          <button
+            id="deleteLessonBtn"
+            type="button"
+            class="hidden px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:bg-rose-50 transition"
+            title="Xóa bài học này"
+          >
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bộ điều khiển tạo đề khuyết từ / cụm từ / câu -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+        <h2 class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-brand-700"></i>
+          <span>Tùy chỉnh phạm vi & độ khó</span>
+        </h2>
+
+        <button
+          id="regenerateBtn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs sm:text-sm font-bold transition flex items-center gap-1.5 active:scale-[0.98]"
+        >
+          <i class="fa-solid fa-shuffle"></i>
+          <span>🔄 Tạo đề ngẫu nhiên khác</span>
+        </button>
+      </div>
+
+      <!-- Hàng 1: Chọn đoạn văn -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+          1. Chọn đoạn muốn nghe & làm bài:
+        </div>
+        <div id="scopePills" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Hàng 2: Chọn dạng khuyết & Mức độ -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-1">
+        <div class="md:col-span-7 space-y-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            2. Chọn chế độ khuyết:
+          </div>
+          <div id="modePills" class="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              data-mode="word"
+              class="mode-btn py-2.5 px-2 sm:px-3 rounded-xl border text-xs sm:text-sm font-bold transition text-center"
+            >
+              Khuyết từ đơn
+            </button>
+            <button
+              type="button"
+              data-mode="phrase"
+              class="mode-btn py-2.5 px-2 sm:px-3 rounded-xl border text-xs sm:text-sm font-bold transition text-center"
+            >
+              Khuyết cụm từ
+            </button>
+            <button
+              type="button"
+              data-mode="sentence"
+              class="mode-btn py-2.5 px-2 sm:px-3 rounded-xl border text-xs sm:text-sm font-bold transition text-center"
+            >
+              Khuyết cả câu
+            </button>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 space-y-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            3. Mật độ chỗ trống & Gợi ý:
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="inline-flex rounded-xl bg-slate-100 p-1">
+              <button type="button" data-density="low" class="density-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition">Ít</button>
+              <button type="button" data-density="medium" class="density-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition">Vừa</button>
+              <button type="button" data-density="high" class="density-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition">Nhiều</button>
+            </div>
+
+            <label class="inline-flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 select-none">
+              <input id="showLetterCountToggle" type="checkbox" class="rounded text-brand-700 focus:ring-brand-700 w-4 h-4" />
+              <span>Hiện số chữ cái</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TRÌNH PHÁT VIDEO / AUDIO TÍCH HỢP & CHIA MỐC THỜI GIAN TỪNG ĐOẠN      -->
+    <!-- ===================================================================== -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-brand-900 text-white px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-circle-play text-accent-500 text-base"></i>
+          <span class="text-xs sm:text-sm font-extrabold tracking-wide">
+            TRÌNH PHÁT VIDEO / AUDIO BÀI NGHE
+          </span>
+          <span id="playerCurrentTimeBadge" class="text-xs font-mono bg-white/15 px-2 py-0.5 rounded-lg">
+            00:00
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="toggleMediaUrlBarBtn"
+            type="button"
+            class="text-xs font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-link"></i>
+            <span>Đổi Link / File nghe</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thanh nhập / thay đổi Link Video hoặc chọn File Audio trực tiếp -->
+      <div id="mediaUrlBar" class="hidden bg-slate-50 border-b border-slate-200 p-4 space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
+          <div class="md:col-span-8">
+            <label for="inlineMediaUrlInput" class="block text-[11px] font-bold uppercase text-slate-500 mb-1">
+              Dán Link YouTube, Google Drive hoặc Link MP3/MP4 từ mã QR sách:
+            </label>
+            <input
+              id="inlineMediaUrlInput"
+              type="url"
+              placeholder="https://www.youtube.com/watch?v=... hoặc https://.../audio.mp3"
+              class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs sm:text-sm font-mono bg-white focus:outline-none focus:border-brand-700"
+            />
+          </div>
+          <div class="md:col-span-4 flex items-end gap-2 pt-0 md:pt-4">
+            <button
+              id="saveInlineMediaUrlBtn"
+              type="button"
+              class="flex-1 py-2 px-3 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-bold transition"
+            >
+              Áp dụng Link
+            </button>
+            <label
+              for="localMediaFileInput"
+              class="cursor-pointer py-2 px-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-bold transition shrink-0"
+              title="Chọn file MP3/MP4 lưu trên máy"
+            >
+              <i class="fa-solid fa-folder-open"></i> File máy
+            </label>
+            <input id="localMediaFileInput" type="file" accept="audio/*,video/*" class="hidden" />
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 sm:p-5 space-y-4">
+        <!-- Vùng hiển thị Player (YouTube IFrame / HTML5 Video / HTML5 Audio / Trạng thái trống) -->
+        <div id="mediaPlayerStage" class="rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
+          <!-- YouTube Container -->
+          <div id="ytPlayerWrapper" class="hidden aspect-video max-h-[260px] w-full mx-auto bg-black">
+            <div id="ytPlayerIframe"></div>
+          </div>
+
+          <!-- HTML5 Video Container -->
+          <video id="html5VideoPlayer" class="hidden w-full max-h-[260px] bg-black" controls playsinline></video>
+
+          <!-- HTML5 Audio Container -->
+          <div id="html5AudioWrapper" class="hidden p-4 bg-slate-800">
+            <audio id="html5AudioPlayer" class="w-full" controls></audio>
+          </div>
+
+          <!-- Khi chưa có Link Video/Audio -->
+          <div id="noMediaPlaceholder" class="p-5 text-center bg-slate-50 text-slate-600 space-y-2">
+            <p class="text-xs sm:text-sm font-bold text-slate-700">
+              Bài học này chưa gắn Link Video/Audio (hoặc không tìm thấy mã QR trên ảnh).
+            </p>
+            <p class="text-xs text-slate-500">
+              Bấm nút <strong>"Đổi Link / File nghe"</strong> ở góc phải thanh tiêu đề phía trên để dán link YouTube/MP3 hoặc chọn file từ máy.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bộ điều khiển luyện nghe chuyên dụng cho đoạn đang chọn -->
+        <div class="bg-brand-50/70 border border-brand-100 rounded-2xl p-3.5 sm:p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <button
+                id="playSegmentBtn"
+                type="button"
+                class="px-4 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 active:scale-[0.98] text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-1.5"
+              >
+                <span>▶️ Phát đúng đoạn này</span>
+              </button>
+
+              <button
+                id="loopSegmentBtn"
+                type="button"
+                class="px-3.5 py-2.5 rounded-xl border border-brand-200 bg-white hover:bg-brand-50 text-brand-800 text-xs sm:text-sm font-bold transition flex items-center gap-1.5"
+              >
+                <span>🔁 Lặp lại đoạn (nghỉ 3s): TẮT</span>
+              </button>
+
+              <button
+                id="rewind5sBtn"
+                type="button"
+                class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold transition"
+              >
+                ⏪ Lùi 5 giây
+              </button>
+            </div>
+
+            <!-- Tốc độ phát -->
+            <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1">
+              <span class="text-[11px] font-bold text-slate-500 pl-2 pr-1">Tốc độ:</span>
+              <button type="button" data-rate="0.75" class="rate-btn px-2.5 py-1 rounded-lg text-xs font-bold transition">0.75x</button>
+              <button type="button" data-rate="1" class="rate-btn px-2.5 py-1 rounded-lg text-xs font-bold transition">1.0x</button>
+              <button type="button" data-rate="1.25" class="rate-btn px-2.5 py-1 rounded-lg text-xs font-bold transition">1.25x</button>
+            </div>
+          </div>
+
+          <!-- Thiết lập mốc thời gian (Từ giây - Đến giây) cho đoạn đang chọn -->
+          <div id="segmentTimestampBar" class="pt-2.5 border-t border-brand-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="timestampScopeLabel" class="font-extrabold text-brand-900">
+                Mốc thời gian Đoạn 1:
+              </span>
+
+              <div class="inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5">
+                <span class="text-slate-500 font-semibold">Từ:</span>
+                <input
+                  id="segStartInput"
+                  type="text"
+                  placeholder="00:00"
+                  class="w-14 text-center font-mono font-bold text-slate-800 focus:outline-none"
+                />
+                <button
+                  id="captureStartBtn"
+                  type="button"
+                  class="px-2 py-0.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold transition"
+                  title="Lấy giây hiện tại trên video làm điểm bắt đầu"
+                >
+                  ⏱️ Chốt đầu
+                </button>
+              </div>
+
+              <div class="inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5">
+                <span class="text-slate-500 font-semibold">Đến:</span>
+                <input
+                  id="segEndInput"
+                  type="text"
+                  placeholder="00:30"
+                  class="w-14 text-center font-mono font-bold text-slate-800 focus:outline-none"
+                />
+                <button
+                  id="captureEndBtn"
+                  type="button"
+                  class="px-2 py-0.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold transition"
+                  title="Lấy giây hiện tại trên video làm điểm kết thúc"
+                >
+                  ⏱️ Chốt cuối
+                </button>
+              </div>
+            </div>
+
+            <div id="loopCountdownText" class="hidden font-bold text-accent-600">
+              Đang nghỉ 3 giây để con viết vở...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Khung hiển thị bài tập (Đề bài đánh số) -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-slate-50 border-b border-slate-200 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg bg-brand-700 text-white text-xs font-bold">
+            ĐỀ LUYỆN NGHE
+          </span>
+          <span id="blankCountBadge" class="text-xs sm:text-sm font-bold text-slate-700">
+            Có 0 chỗ trống cần điền
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="toggleWordBankBtn"
+            type="button"
+            class="hidden text-xs font-bold text-slate-700 hover:bg-slate-200 bg-slate-100 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Từ gợi ý</span>
+          </button>
+
+          <button
+            id="toggleShowAnswersBtn"
+            type="button"
+            class="text-xs sm:text-sm font-bold text-brand-700 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5"
+          >
+            <i class="fa-regular fa-eye"></i>
+            <span id="toggleShowAnswersText">👁️ Xem đáp án gốc</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Khung Từ Gợi Ý (Word Bank) -->
+      <div id="wordBankDrawer" class="hidden border-b border-slate-200 bg-amber-50/70 px-5 py-3.5">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800 mb-2">
+          Kho từ gợi ý (Xáo trộn ngẫu nhiên):
+        </div>
+        <div id="wordBankList" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Nội dung đoạn văn có ô trống đánh số -->
+      <div id="passageContainer" class="p-5 sm:p-7 passage-text text-slate-800 space-y-5"></div>
+
+      <!-- Hộp đáp án gốc -->
+      <div id="answerKeyDrawer" class="hidden border-t border-slate-200 bg-emerald-50/60 px-5 py-4">
+        <div class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 mb-2 flex items-center gap-1.5">
+          <i class="fa-solid fa-key"></i>
+          <span>Đáp án chuẩn theo số thứ tự:</span>
+        </div>
+        <div id="answerKeyList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm"></div>
+      </div>
+    </section>
+
+    <!-- Khu vực Nộp bài & Chấm điểm (2 Tabs con) -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="grid grid-cols-2 border-b border-slate-200 bg-slate-50">
+        <button
+          id="tabNotebookBtn"
+          type="button"
+          class="py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 transition"
+        >
+          <span>✍️ Viết ra vở & Chụp ảnh chấm</span>
+        </button>
+        <button
+          id="tabTypingBtn"
+          type="button"
+          class="py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 transition"
+        >
+          <span>⌨️ Gõ trực tiếp trên máy</span>
+        </button>
+      </div>
+
+      <!-- TAB CON 1: Chấm bài viết tay trên giấy (Hỗ trợ 1 hoặc nhiều ảnh trang vở) -->
+      <div id="tabNotebookContent" class="p-5 sm:p-6 space-y-5">
+        <div class="bg-brand-50/80 border border-brand-100 rounded-2xl p-4 flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-brand-700 text-white flex items-center justify-center shrink-0 mt-0.5">
+            <i class="fa-solid fa-pencil"></i>
+          </div>
+          <div class="text-sm text-slate-700 space-y-1">
+            <p class="font-bold text-brand-900">Quy trình luyện nghe & viết vở (Hỗ trợ chụp 1 hoặc nhiều trang vở):</p>
+            <p>
+              Con bấm nghe đoạn văn phía trên, nhìn các ô đánh số <span class="font-bold text-brand-700">(1), (2), (3)...</span> và viết đáp án ra vở theo từng dòng (ví dụ: <code class="bg-white px-1.5 py-0.5 rounded border border-brand-100 font-semibold text-xs">1. video games</code>). Viết xong, chụp ảnh trang vở (có thể chọn nhiều ảnh nếu viết sang trang thứ 2) để AI chấm điểm!
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <label
+            for="notebookImageInput"
+            class="w-full sm:w-auto cursor-pointer px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-extrabold text-sm sm:text-base shadow-md shadow-emerald-600/15 transition flex items-center justify-center gap-2.5"
+          >
+            <i class="fa-solid fa-camera text-lg"></i>
+            <span>Chụp / Tải ảnh trang vở của con (1 hoặc nhiều ảnh)</span>
+          </label>
+          <input
+            id="notebookImageInput"
+            type="file"
+            accept="image/*"
+            multiple
+            class="hidden"
+          />
+        </div>
+
+        <!-- Khu vực hiển thị ảnh vở vừa tải & Kết quả AI chấm -->
+        <div id="notebookGradingArea" class="hidden space-y-5 pt-2 border-t border-slate-100">
+          <div id="notebookLoading" class="hidden py-8 flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-12 h-12 border-4 border-brand-100 border-t-brand-700 rounded-full animate-spin"></div>
+            <div>
+              <p class="font-bold text-slate-800 text-base">AI đang đọc chữ viết tay và chấm bài...</p>
+              <p class="text-xs text-slate-500 mt-1">Đang đối chiếu từng số thứ tự (1), (2), (3)... và lưu điểm tiến bộ</p>
+            </div>
+          </div>
+
+          <div id="notebookResultBox" class="hidden space-y-5">
+            <!-- Bảng tổng điểm -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5">
+              <div class="md:col-span-4 flex items-center gap-4">
+                <div id="scoreCircle" class="w-20 h-20 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center shrink-0 shadow-sm">
+                  <span id="scoreFraction" class="text-xl font-extrabold leading-none">0/0</span>
+                  <span class="text-[11px] font-semibold opacity-90 mt-1">CÂU ĐÚNG</span>
+                </div>
+                <div>
+                  <div id="scorePercentLabel" class="text-lg font-extrabold text-slate-900">0%</div>
+                  <p class="text-xs text-slate-500 font-medium">Đã lưu vào biểu đồ ngày hôm nay</p>
+                </div>
+              </div>
+
+              <div class="md:col-span-8 bg-white rounded-xl p-3.5 border border-slate-200">
+                <div class="text-xs font-bold uppercase tracking-wider text-brand-700 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-comment-dots"></i>
+                  <span>Nhận xét & Lời khuyên cho con:</span>
+                </div>
+                <p id="aiFeedbackText" class="text-sm text-slate-700 leading-relaxed"></p>
+              </div>
+            </div>
+
+            <!-- Ảnh vở thu nhỏ + Bảng đối chiếu từng câu -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              <div class="lg:col-span-4 space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Ảnh bài làm của con:</div>
+                <div id="notebookPreviewGallery" class="space-y-2"></div>
+              </div>
+
+              <div class="lg:col-span-8 space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Chi tiết từng câu:</div>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr class="bg-slate-100 text-slate-700 text-xs uppercase">
+                        <th class="py-3 px-3 font-extrabold w-14 text-center">Câu</th>
+                        <th class="py-3 px-3 font-extrabold">Đáp án chuẩn</th>
+                        <th class="py-3 px-3 font-extrabold">Chữ con viết</th>
+                        <th class="py-3 px-3 font-extrabold">Kết quả & Sửa lỗi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="gradingTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB CON 2: Gõ đáp án trực tiếp trên màn hình -->
+      <div id="tabTypingContent" class="hidden p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <div class="text-sm text-slate-700">
+            <span class="font-bold text-slate-900">Chế độ gõ trực tiếp:</span> Con nhập đáp án vào các ô trống bên trên rồi bấm nút kiểm tra (điểm số cũng được lưu vào biểu đồ tiến bộ).
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button
+              id="resetTypingBtn"
+              type="button"
+              class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold transition"
+            >
+              Xóa làm lại
+            </button>
+            <button
+              id="checkTypingBtn"
+              type="button"
+              class="px-5 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-check-double"></i>
+              <span>Kiểm tra & Lưu điểm</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="typingScoreBanner" class="hidden rounded-2xl p-4 border text-sm font-bold flex items-center justify-between"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- VIEW 2: TIẾN BỘ CỦA CON & ĐỒNG BỘ GOOGLE SHEETS (CHART.JS)              -->
+  <!-- ======================================================================= -->
+  <main id="viewProgress" class="hidden flex-1 max-w-5xl w-full mx-auto px-4 py-5 space-y-5">
+
+    <section class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-chart-line text-brand-700"></i>
+          <span>Nhật ký & Biểu đồ Tiến bộ Theo Ngày</span>
+        </h2>
+        <p class="text-xs text-slate-500 mt-0.5">
+          Theo dõi tỷ lệ % câu đúng qua từng buổi học và đồng bộ chéo giữa máy tính & điện thoại.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          id="syncFromSheetsBtn"
+          type="button"
+          class="px-4 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-2"
+        >
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Tải dữ liệu từ Google Sheets</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3 Thẻ KPI Tổng Quan -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-700 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Tổng số bài đã luyện</div>
+          <div id="kpiTotalSessions" class="text-2xl font-extrabold text-slate-900 mt-0.5">0 bài</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-bullseye"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Tỷ lệ chính xác TB</div>
+          <div id="kpiAvgAccuracy" class="text-2xl font-extrabold text-emerald-700 mt-0.5">0%</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-accent-500 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-fire"></i>
+        </div>
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Chuỗi ngày học liên tiếp</div>
+          <div id="kpiStreakDays" class="text-2xl font-extrabold text-slate-900 mt-0.5">0 ngày</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Biểu đồ cột Chart.js theo từng ngày -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-800">
+            Biểu đồ tỷ lệ điểm đạt được theo từng ngày (%)
+          </h3>
+          <p class="text-xs text-slate-500">Hiển thị tối đa 14 ngày luyện tập gần nhất</p>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-semibold">
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span> ≥ 80%</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-400"></span> 50–79%</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-500"></span> &lt; 50%</span>
+        </div>
+      </div>
+
+      <div id="chartWrapper" class="relative w-full h-64 sm:h-72">
+        <canvas id="dailyProgressCanvas"></canvas>
+      </div>
+      <div id="emptyChartMsg" class="hidden py-10 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 space-y-2">
+        <i class="fa-solid fa-chart-simple text-3xl text-slate-300"></i>
+        <p class="text-sm font-bold text-slate-600">Chưa có dữ liệu điểm số nào</p>
+        <p class="text-xs text-slate-400">Hãy hoàn thành một bài luyện nghe hoặc bấm "Tải dữ liệu từ Google Sheets" ở góc trên.</p>
+      </div>
+    </section>
+
+    <!-- Kho từ hay viết sai & Nút luyện tập lại -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-spell-check text-rose-600"></i>
+            <span>Kho từ / cụm từ con từng viết sai</span>
+          </h3>
+          <p class="text-xs text-slate-500">Tự động tổng hợp từ các bài chấm để cuối tuần con ôn lại</p>
+        </div>
+
+        <button
+          id="practiceMissedWordsBtn"
+          type="button"
+          class="hidden px-4 py-2 rounded-xl bg-accent-500 hover:bg-accent-600 text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-2"
+        >
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Tạo bài ôn tập các từ sai này</span>
+        </button>
+      </div>
+
+      <div id="missedWordsList" class="flex flex-wrap gap-2">
+        <span class="text-sm text-slate-400 italic">Chưa có từ viết sai nào được ghi nhận.</span>
+      </div>
+    </section>
+
+    <!-- Bảng lịch sử chi tiết từng lần làm bài -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-sm sm:text-base font-extrabold text-slate-800">
+          Lịch sử chi tiết các lần làm bài
+        </h3>
+        <button
+          id="clearLocalHistoryBtn"
+          type="button"
+          class="text-xs font-bold text-rose-600 hover:underline"
+        >
+          Xóa lịch sử trên máy này
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="py-3 px-4 font-extrabold">Ngày</th>
+              <th class="py-3 px-4 font-extrabold">Bài học & Phạm vi</th>
+              <th class="py-3 px-4 font-extrabold">Chế độ</th>
+              <th class="py-3 px-4 font-extrabold text-center">Điểm số</th>
+              <th class="py-3 px-4 font-extrabold text-center">Tỷ lệ %</th>
+              <th class="py-3 px-4 font-extrabold">Từ viết sai</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- VIEW 3: CÀI ĐẶT GEMINI API KEY & GOOGLE SHEETS SYNC                     -->
+  <!-- ======================================================================= -->
+  <main id="viewSettings" class="hidden flex-1 max-w-5xl w-full mx-auto px-4 py-5 space-y-5">
+
+    <!-- Cài đặt Gemini API Key -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-accent-500 flex items-center justify-center shrink-0 text-lg">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <div>
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900">
+            1. Kết nối Gemini AI (Đọc nhiều ảnh trang sách & Chấm chữ viết tay)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Lấy mã miễn phí tại <a href="https://aistudio.google.com/" target="_blank" rel="noopener" class="text-brand-700 font-bold underline">aistudio.google.com</a> (mục Get API key) và dán vào ô dưới đây. Mã được lưu an toàn trong LocalStorage của trình duyệt.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <input
+          id="geminiApiKeyInput"
+          type="password"
+          placeholder="Dán mã Gemini API Key bắt đầu bằng AIzaSy..."
+          class="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-brand-700"
+        />
+        <button
+          id="toggleApiKeyVisBtn"
+          type="button"
+          class="px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-slate-700 text-xs font-bold hover:bg-slate-100"
+        >
+          Hiện / Ẩn
+        </button>
+      </div>
+    </section>
+
+    <!-- Cài đặt Google Sheets Sync URL -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-lg">
+          <i class="fa-solid fa-table"></i>
+        </div>
+        <div>
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900">
+            2. Đồng bộ 2 chiều qua Google Sheets (Bài học, Mốc Video & Điểm số)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Dán đường link <strong>Google Apps Script Web App URL</strong> để đồng bộ cả danh sách bài học (kèm link video + mốc thời gian từng đoạn) và lịch sử điểm số giữa máy tính của con và điện thoại của mẹ.
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <input
+          id="googleScriptUrlInput"
+          type="url"
+          placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+          class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-mono focus:outline-none focus:border-brand-700"
+        />
+
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <button
+            id="testSheetsSyncBtn"
+            type="button"
+            class="px-4 py-2.5 rounded-xl border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-bold transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-plug-circle-check"></i>
+            <span>Kiểm tra & Đồng bộ ngay</span>
+          </button>
+
+          <button
+            id="saveSettingsBtn"
+            type="button"
+            class="px-6 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Lưu cấu hình</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hướng dẫn cài đặt từng bước bằng tiếng Việt -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm text-slate-700 space-y-1.5">
+        <p class="font-extrabold text-slate-900">Hướng dẫn cài đặt Google Sheets trong 2 phút:</p>
+        <ol class="list-decimal list-inside space-y-1">
+          <li>Mở Google Drive và tạo một file <strong>Google Trang tính (Google Sheets)</strong> mới.</li>
+          <li>Trên thanh menu chọn <strong>Tiện ích mở rộng (Extensions) → Apps Script</strong>.</li>
+          <li>Bấm nút <strong>"Sao chép mã Apps Script"</strong> bên dưới, dán đè toàn bộ vào trình soạn thảo Apps Script.</li>
+          <li>Bấm <strong>Triển khai (Deploy) → Tùy chọn triển khai mới → Ứng dụng web (Web app)</strong>, chọn mục <em>Ai có quyền truy cập</em> là <strong>Bất kỳ ai (Anyone)</strong> rồi bấm <strong>Triển khai</strong>.</li>
+          <li>Copy đường link Web App dán vào ô phía trên trên cả máy tính và điện thoại rồi bấm <strong>Lưu cấu hình</strong>.</li>
+        </ol>
+      </div>
+
+      <!-- Mã Google Apps Script hỗ trợ 2 sheet Lessons và Scores -->
+      <div class="pt-2 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-xs sm:text-sm font-extrabold text-slate-800">
+            Mã Google Apps Script (Hỗ trợ 2 sheet: Lessons & Scores):
+          </h3>
+          <button
+            id="copyAppsScriptBtn"
+            type="button"
+            class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5"
+          >
+            <i class="fa-regular fa-copy"></i>
+            <span>Sao chép mã Apps Script</span>
+          </button>
+        </div>
+
+        <pre id="appsScriptCodeBlock" class="bg-slate-900 text-slate-100 rounded-2xl p-4 text-xs font-mono overflow-x-auto leading-relaxed">function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var payload = JSON.parse(e.postData.contents);
+
+  if (payload.action === "saveScore") {
+    var sheet = ss.getSheetByName("Scores") || ss.insertSheet("Scores");
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["ID", "DateISO", "DateVN", "LessonTitle", "Scope", "Mode", "Correct", "Total", "Percent", "WrongWords"]);
+    }
+    var r = payload.data;
+    sheet.appendRow([
+      r.id, r.dateISO, r.dateVN, r.lessonTitle, r.scopeLabel,
+      r.modeLabel, r.correct, r.total, r.percent, (r.wrongWords || []).join(", ")
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (payload.action === "saveLesson") {
+    var lSheet = ss.getSheetByName("Lessons") || ss.insertSheet("Lessons");
+    if (lSheet.getLastRow() === 0) {
+      lSheet.appendRow(["ID", "Title", "MediaUrl", "ParagraphsJSON", "TimestampsJSON", "KeywordsJSON"]);
+    }
+    var l = payload.data;
+    // Cập nhật nếu ID đã tồn tại, ngược lại thêm dòng mới
+    var lastRow = lSheet.getLastRow();
+    var updated = false;
+    if (lastRow > 1) {
+      var ids = lSheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
+        if (String(ids[i][0]) === String(l.id)) {
+          lSheet.getRange(i + 2, 1, 1, 6).setValues([[
+            l.id, l.title, l.mediaUrl || "",
+            JSON.stringify(l.paragraphs || []),
+            JSON.stringify(l.timestamps || []),
+            JSON.stringify(l.keywords || [])
+          ]]);
+          updated = true;
+          break;
+        }
+      }
+    }
+    if (!updated) {
+      lSheet.appendRow([
+        l.id, l.title, l.mediaUrl || "",
+        JSON.stringify(l.paragraphs || []),
+        JSON.stringify(l.timestamps || []),
+        JSON.stringify(l.keywords || [])
+      ]);
+    }
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Scores");
+  var scores = [];
+  if (sheet && sheet.getLastRow() > 1) {
+    var rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 10).getValues();
+    scores = rows.map(function(row) {
+      return {
+        id: String(row[0]),
+        dateISO: String(row[1]),
+        dateVN: String(row[2]),
+        lessonTitle: String(row[3]),
+        scopeLabel: String(row[4]),
+        modeLabel: String(row[5]),
+        correct: Number(row[6]),
+        total: Number(row[7]),
+        percent: Number(row[8]),
+        wrongWords: row[9] ? String(row[9]).split(",").map(function(s){ return s.trim(); }).filter(Boolean) : []
+      };
+    });
+  }
+
+  var lSheet = ss.getSheetByName("Lessons");
+  var lessons = [];
+  if (lSheet && lSheet.getLastRow() > 1) {
+    var lRows = lSheet.getRange(2, 1, lSheet.getLastRow() - 1, 6).getValues();
+    lessons = lRows.map(function(row) {
+      return {
+        id: String(row[0]),
+        title: String(row[1]),
+        mediaUrl: String(row[2] || ""),
+        isSample: false,
+        paragraphs: JSON.parse(row[3] || "[]"),
+        timestamps: JSON.parse(row[4] || "[]"),
+        keywords: JSON.parse(row[5] || "[]")
+      };
+    });
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "ok",
+    scores: scores,
+    lessons: lessons
+  })).setMimeType(ContentService.MimeType.JSON);
+}</pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 1: TẠO BÀI MỚI TỪ NHIỀU ẢNH SÁCH & TỰ ĐỘNG QUÉT QR LẤY VIDEO      -->
+  <!-- ======================================================================= -->
+  <div id="createImagesModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-accent-500 text-white flex items-center justify-center">
+            <i class="fa-solid fa-camera"></i>
+          </span>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+            Tạo bài mới từ ảnh sách & Quét mã QR
+          </h3>
+        </div>
+        <button id="closeCreateImagesModalBtn" type="button" class="w-8 h-8 rounded-full hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-4">
+        <!-- Bước 1: Chọn 1 hoặc nhiều ảnh trang sách -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+            1. Chọn 1 hoặc nhiều ảnh trang sách (theo đúng thứ tự trang):
+          </label>
+          <label
+            for="multiBookImagesInput"
+            class="cursor-pointer border-2 border-dashed border-brand-300 hover:border-brand-600 bg-brand-50/40 hover:bg-brand-50 rounded-2xl p-5 flex flex-col items-center justify-center text-center transition space-y-1.5"
+          >
+            <i class="fa-solid fa-images text-2xl text-brand-700"></i>
+            <span class="text-sm font-extrabold text-brand-900">
+              Bấm để chọn ảnh trang sách (có thể chọn nhiều ảnh cùng lúc)
+            </span>
+            <span class="text-xs text-slate-500">
+              Hệ thống sẽ tự động quét mã QR góc trang sách để lấy Link Video/Audio
+            </span>
+          </label>
+          <input
+            id="multiBookImagesInput"
+            type="file"
+            accept="image/*"
+            multiple
+            class="hidden"
+          />
+
+          <!-- Danh sách ảnh xem trước & nút thêm ảnh -->
+          <div id="selectedBookImagesGrid" class="hidden grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2"></div>
+        </div>
+
+        <!-- Trạng thái quét QR & Link Video/Audio -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="newLessonMediaUrlInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+              2. Link Video / Audio bài nghe (Tự động điền nếu quét thấy QR):
+            </label>
+            <span id="qrScanStatusBadge" class="text-xs font-bold text-slate-400">
+              Chưa chọn ảnh
+            </span>
+          </div>
+          <input
+            id="newLessonMediaUrlInput"
+            type="url"
+            placeholder="Link YouTube, Google Drive hoặc MP3/MP4 sẽ tự hiện ở đây (hoặc dán thủ công)..."
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:border-brand-700"
+          />
+        </div>
+
+        <!-- Tên bài học -->
+        <div class="space-y-1.5">
+          <label for="newLessonTitleInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+            3. Tên bài học (Để trống AI sẽ tự đặt theo tiêu đề trong sách):
+          </label>
+          <input
+            id="newLessonTitleInput"
+            type="text"
+            placeholder="Ví dụ: Unit 5 - Video Games (Trang 45-46)"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-semibold focus:outline-none focus:border-brand-700"
+          />
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
+        <button id="cancelCreateImagesModalBtn" type="button" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-bold hover:bg-slate-100">
+          Hủy
+        </button>
+        <button
+          id="submitCreateFromImagesBtn"
+          type="button"
+          class="px-5 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-600 text-white text-sm font-extrabold shadow-sm flex items-center gap-2"
+        >
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Trích xuất văn bản & Tạo đề</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Loading toàn màn hình khi AI trích xuất nhiều ảnh -->
+  <div id="ocrOverlay" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl space-y-4">
+      <div class="w-16 h-16 mx-auto border-4 border-amber-100 border-t-accent-500 rounded-full animate-spin"></div>
+      <h3 class="text-lg font-extrabold text-slate-900">Đang xử lý ảnh trang sách...</h3>
+      <p class="text-sm text-slate-600 leading-relaxed">
+        AI đang đọc lần lượt các trang sách, nối liền mạch văn bị tách trang và chia thành từng đoạn (Đoạn 1, Đoạn 2, Đoạn 3...).
+      </p>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 2: SỬA / DÁN VĂN BẢN & LINK VIDEO THỦ CÔNG                        -->
+  <!-- ======================================================================= -->
+  <div id="manualModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+          Chỉnh sửa nội dung bài học & Link Video
+        </h3>
+        <button id="closeManualModalBtn" type="button" class="w-8 h-8 rounded-full hover:bg-slate-100 text-slate-500 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-4">
+        <div>
+          <label for="manualTitleInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            Tên bài học (Unit / Chủ đề)
+          </label>
+          <input
+            id="manualTitleInput"
+            type="text"
+            placeholder="Ví dụ: Unit 5 - Video Games (Trang 45)"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-semibold focus:outline-none focus:border-brand-700"
+          />
+        </div>
+
+        <div>
+          <label for="manualMediaUrlInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            Link Video / Audio bài nghe (YouTube, Google Drive, MP3/MP4)
+          </label>
+          <input
+            id="manualMediaUrlInput"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:border-brand-700"
+          />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="manualContentInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+              Nội dung tiếng Anh (Mỗi đoạn cách nhau 1 dòng trống)
+            </label>
+            <button id="newBlankLessonBtn" type="button" class="text-xs font-bold text-brand-700 hover:underline">
+              + Tạo trang trắng mới
+            </button>
+          </div>
+          <textarea
+            id="manualContentInput"
+            rows="8"
+            placeholder="Dán đoạn văn tiếng Anh vào đây. Mỗi đoạn văn đặt trên một đoạn riêng (ấn Enter 2 lần để tách Đoạn 1, Đoạn 2...)..."
+            class="w-full rounded-xl border border-slate-300 p-3.5 text-sm leading-relaxed focus:outline-none focus:border-brand-700"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
+        <button id="cancelManualModalBtn" type="button" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-bold hover:bg-slate-100">
+          Hủy
+        </button>
+        <button id="saveManualLessonBtn" type="button" class="px-5 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white text-sm font-extrabold">
+          Lưu & Cập nhật
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+    // =========================================================================
+    // 1. CẤU HÌNH HẰNG SỐ & BÀI MẪU NẠP SẴN (KÈM MỐC THỜI GIAN MẪU)
+    // =========================================================================
+    const runtimeApiKey = "";
+    const GEMINI_MODEL = "gemini-2.5-flash";
+
+    const STORAGE_KEYS = {
+      LESSONS: "grade6_listening_lessons_v3",
+      RESULTS: "grade6_listening_results_v3",
+      SETTINGS: "grade6_listening_settings_v3"
+    };
+
+    const SAMPLE_LESSON = {
+      id: "sample-video-games",
+      title: "Video Games: Advantages & Disadvantages (Bài mẫu 4 đoạn)",
+      isSample: true,
+      mediaUrl: "",
+      timestamps: [
+        { start: 0, end: 32 },
+        { start: 32, end: 78 },
+        { start: 78, end: 145 },
+        { start: 145, end: 185 }
+      ],
+      keywords: [
+        "video games", "affect", "negatively", "online", "game systems", "mobile devices",
+        "regularly", "benefits", "dangers", "considered", "educational", "bright lights",
+        "cartoons", "exciting stories", "creative", "improve", "imagination", "technology",
+        "devices", "recent study", "download", "violent", "scary", "health problems",
+        "exercise", "overweight", "homework", "bad grades", "social skills", "themselves",
+        "conclusion", "advantages", "disadvantages"
+      ],
+      paragraphs: [
+        "Do video games affect our children negatively? Today, our children spend more and more time online. Many children spend a lot of their free time playing video games on the internet, on game systems or on their mobile devices. In the UK, 99% of kids aged 8 to 15 play video games every week, and children as young as five play video games regularly. This information tells us that the benefits and dangers of video games must be carefully considered.",
+        "For many people, video games are fun and educational. They have bright lights, funny cartoons and exciting stories. Everywhere you look, you can see children playing these games. They play on buses and trains, in restaurants and even at school. Video games also make you think in a creative way and you have to move your hands and eyes quickly. This can improve the way that a child's brain works. Video games also make children use their imagination. The player has to do many creative things, like draw, tell stories and build things. Video games are also a good way to teach children about technology because they can learn how computers and other devices work while they play.",
+        "However, a recent study suggests that video games can also be bad for children. First, children can download many games for free. They don't need money, so they don't need to ask their parents if they can download the games. This means that parents often don't know if their children are playing violent or scary games. Second, many children spend too much time playing video games on computers, smartphones and tablets and this can lead to health problems – children who spend too much time on the computer and don't exercise can become overweight. Third, if children spend too much time playing video games instead of doing homework, they can have problems at school and get bad grades. Finally, video games can affect children's social skills. Playing and working with friends is very important for children and it teaches them how to talk to other people. If children spend too much time playing video games by themselves, they might not learn how to play with their friends.",
+        "In conclusion, it seems clear that video games have some advantages and some disadvantages. On the one hand, they are fun and have many educational benefits for children. On the other hand, they can cause problems with children's health and social skills. It is up to parents to know what games their children are playing and how much time they spend on them. Parents should also make sure their children get enough exercise and spend time with other children."
+      ]
+    };
+
+    const STOP_WORDS = new Set([
+      "a", "an", "the", "and", "or", "but", "if", "then", "else", "when", "at", "by",
+      "for", "with", "about", "against", "between", "into", "through", "during", "before",
+      "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off",
+      "over", "under", "again", "further", "once", "here", "there", "where", "why", "how",
+      "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no",
+      "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can",
+      "will", "just", "don", "should", "now", "is", "are", "was", "were", "be", "been",
+      "being", "have", "has", "had", "having", "do", "does", "did", "doing", "i", "me",
+      "my", "myself", "we", "our", "ours", "you", "your", "yours", "he", "him", "his",
+      "she", "her", "hers", "it", "its", "they", "them", "their", "theirs", "what",
+      "which", "who", "whom", "this", "that", "these", "those", "as", "of"
+    ]);
+
+    // =========================================================================
+    // 2. TRẠNG THÁI ỨNG DỤNG (STATE)
+    // =========================================================================
+    let state = {
+      mainView: "practice", // "practice" | "progress" | "settings"
+      lessons: [],
+      results: [],
+      settings: {
+        geminiApiKey: "",
+        googleScriptUrl: ""
+      },
+      currentLessonId: SAMPLE_LESSON.id,
+      scope: "0", // "0", "1", "2", ... hoặc "all"
+      mode: "word", // "word" | "phrase" | "sentence"
+      density: "medium", // "low" | "medium" | "high"
+      showLetterCount: false,
+      showWordBank: false,
+      showAnswers: false,
+      activeTab: "notebook", // "notebook" | "typing"
+      renderedParagraphs: [],
+      blanks: [],
+      isManualCreatingNew: false,
+      // Trạng thái danh sách ảnh đang chọn trong modal Tạo bài mới
+      pendingBookFiles: [],
+      // Trạng thái trình phát Media
+      playbackRate: 1,
+      isLoopingSegment: false,
+      segmentMonitorTimer: null,
+      loopTimeoutId: null,
+      activeMediaType: "none", // "youtube" | "video" | "audio" | "none"
+      localBlobUrl: null
+    };
+
+    let ytPlayer = null;
+    let isYtApiReady = false;
+    let pendingYtVideoId = null;
+    let progressChartInstance = null;
+
+    window.onYouTubeIframeAPIReady = function () {
+      isYtApiReady = true;
+      if (pendingYtVideoId) {
+        initOrLoadYouTubeVideo(pendingYtVideoId);
+        pendingYtVideoId = null;
+      }
+    };
+
+    // =========================================================================
+    // 3. QUẢN LÝ LƯU TRỮ LOCALSTORAGE & ĐỒNG BỘ GOOGLE SHEETS
+    // =========================================================================
+    function loadAllFromStorage() {
+      try {
+        const rawSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+        if (rawSettings) {
+          state.settings = { ...state.settings, ...JSON.parse(rawSettings) };
+        }
+      } catch (e) {}
+
+      try {
+        const rawLessons = localStorage.getItem(STORAGE_KEYS.LESSONS);
+        const savedLessons = rawLessons ? JSON.parse(rawLessons) : [];
+        state.lessons = [SAMPLE_LESSON, ...savedLessons.filter(l => l.id !== SAMPLE_LESSON.id)];
+      } catch (e) {
+        state.lessons = [SAMPLE_LESSON];
+      }
+
+      try {
+        const rawResults = localStorage.getItem(STORAGE_KEYS.RESULTS);
+        state.results = rawResults ? JSON.parse(rawResults) : [];
+      } catch (e) {
+        state.results = [];
+      }
+    }
+
+    function saveSettingsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(state.settings));
+      } catch (e) {}
+    }
+
+    function saveLessonsToStorage() {
+      try {
+        const customOnly = state.lessons.filter(l => !l.isSample);
+        localStorage.setItem(STORAGE_KEYS.LESSONS, JSON.stringify(customOnly));
+      } catch (e) {
+        showToast("Bộ nhớ trình duyệt đầy, không thể lưu thêm bài học cục bộ.", "error");
+      }
+    }
+
+    function saveResultsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.RESULTS, JSON.stringify(state.results));
+      } catch (e) {}
+    }
+
+    function getEffectiveGeminiKey() {
+      return (state.settings.geminiApiKey || "").trim() || runtimeApiKey;
+    }
+
+    function getCurrentLesson() {
+      return state.lessons.find(l => l.id === state.currentLessonId) || state.lessons[0];
+    }
+
+    async function pushToGoogleSheets(action, dataObj) {
+      const url = (state.settings.googleScriptUrl || "").trim();
+      if (!url) return false;
+
+      try {
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action, data: dataObj })
+        });
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    async function pullFromGoogleSheets(silent = false) {
+      const url = (state.settings.googleScriptUrl || "").trim();
+      if (!url) {
+        if (!silent) {
+          showToast("Bạn chưa nhập Google Apps Script URL trong mục Cài đặt & Sync.", "error");
+        }
+        return;
+      }
+
+      const btn = document.getElementById("syncFromSheetsBtn");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Đang đồng bộ...</span>`;
+      }
+
+      try {
+        const sep = url.includes("?") ? "&" : "?";
+        const resp = await fetch(`${url}${sep}action=syncAll&t=${Date.now()}`);
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        const json = await resp.json();
+
+        const incomingScores = json.scores || json.results;
+        if (Array.isArray(incomingScores)) {
+          const map = new Map();
+          state.results.forEach(r => map.set(String(r.id), r));
+          incomingScores.forEach(r => map.set(String(r.id), r));
+          state.results = Array.from(map.values()).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+          saveResultsToStorage();
+        }
+
+        if (Array.isArray(json.lessons)) {
+          const lessonMap = new Map();
+          state.lessons.forEach(l => lessonMap.set(String(l.id), l));
+          json.lessons.forEach(l => {
+            if (l.id && Array.isArray(l.paragraphs) && l.paragraphs.length > 0) {
+              lessonMap.set(String(l.id), { ...l, isSample: false });
+            }
+          });
+          const merged = Array.from(lessonMap.values());
+          state.lessons = [SAMPLE_LESSON, ...merged.filter(l => l.id !== SAMPLE_LESSON.id)];
+          saveLessonsToStorage();
+        }
+
+        renderAll();
+        if (!silent) {
+          showToast("Đã đồng bộ bài học, mốc video và điểm số từ Google Sheets!", "success");
+        }
+      } catch (err) {
+        if (!silent) {
+          showToast("Không tải được từ Google Sheets. Hãy kiểm tra lại quyền truy cập 'Anyone' của Web App.", "error");
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i><span>Tải dữ liệu từ Google Sheets</span>`;
+        }
+      }
+    }
+
+    async function recordPracticeResult(correct, total, wrongWordsList) {
+      if (total <= 0) return;
+
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+
+      const dateISO = `${yyyy}-${mm}-${dd}`;
+      const dateVN = `${dd}/${mm}/${yyyy}`;
+      const percent = Math.round((correct / total) * 100);
+
+      const lesson = getCurrentLesson();
+      const scopeLabel = state.scope === "all" ? "Cả bài" : `Đoạn ${parseInt(state.scope, 10) + 1}`;
+      const modeMap = {
+        word: "Khuyết từ đơn",
+        phrase: "Khuyết cụm từ",
+        sentence: "Khuyết cả câu"
+      };
+
+      const entry = {
+        id: String(Date.now()),
+        dateISO,
+        dateVN,
+        lessonTitle: lesson ? lesson.title : "Bài luyện nghe",
+        scopeLabel,
+        modeLabel: modeMap[state.mode] || state.mode,
+        correct,
+        total,
+        percent,
+        wrongWords: wrongWordsList
+      };
+
+      state.results.push(entry);
+      saveResultsToStorage();
+
+      if ((state.settings.googleScriptUrl || "").trim()) {
+        await pushToGoogleSheets("saveScore", entry);
+      }
+    }
+
+    // =========================================================================
+    // 4. QUÉT MÃ QR TỪ ẢNH TRANG SÁCH (jsQR + QUÉT PHÓNG TO GÓC)
+    // =========================================================================
+    async function scanQrFromImageFile(file) {
+      return new Promise(resolve => {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          if (typeof window.jsQR !== "function") {
+            resolve(null);
+            return;
+          }
+
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+          // Hàm quét một vùng (crop) của ảnh với độ phân giải chuẩn hóa
+          const tryScanRegion = (sx, sy, sw, sh, targetWidth) => {
+            const scale = targetWidth / sw;
+            canvas.width = Math.round(sw * scale);
+            canvas.height = Math.round(sh * scale);
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = window.jsQR(imgData.data, imgData.width, imgData.height, {
+              inversionAttempts: "attemptBoth"
+            });
+            return code ? code.data : null;
+          };
+
+          const w = img.naturalWidth;
+          const h = img.naturalHeight;
+
+          // 1. Quét toàn bộ ảnh (độ phân giải 1200px)
+          let found = tryScanRegion(0, 0, w, h, Math.min(w, 1200));
+          if (found) return resolve(found);
+
+          // 2. Quét phóng to 4 góc (mã QR sách giáo khoa thường nằm ở góc trên phải hoặc góc dưới)
+          const halfW = Math.round(w * 0.55);
+          const halfH = Math.round(h * 0.45);
+          const regions = [
+            [w - halfW, 0, halfW, halfH],           // Góc trên bên phải
+            [0, 0, halfW, halfH],                   // Góc trên bên trái
+            [w - halfW, h - halfH, halfW, halfH],   // Góc dưới bên phải
+            [0, h - halfH, halfW, halfH]            // Góc dưới bên trái
+          ];
+
+          for (const [rx, ry, rw, rh] of regions) {
+            found = tryScanRegion(rx, ry, rw, rh, 900);
+            if (found) return resolve(found);
+          }
+
+          resolve(null);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          resolve(null);
+        };
+        img.src = objectUrl;
+      });
+    }
+
+    async function scanQrAcrossFiles(files) {
+      for (const file of files) {
+        const qrData = await scanQrFromImageFile(file);
+        if (qrData && /^https?:\/\//i.test(qrData.trim())) {
+          return qrData.trim();
+        }
+      }
+      return null;
+    }
+
+    // =========================================================================
+    // 5. TRÌNH PHÁT VIDEO / AUDIO & ĐIỀU KHIỂN MỐC THỜI GIAN TỪNG ĐOẠN
+    // =========================================================================
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+        /[?&]v=([a-zA-Z0-9_-]{11})/
+      ];
+      for (const p of patterns) {
+        const m = url.match(p);
+        if (m && m[1]) return m[1];
+      }
+      return null;
+    }
+
+    function normalizeDirectMediaUrl(url) {
+      if (!url) return "";
+      // Chuyển link chia sẻ Google Drive thành link stream trực tiếp
+      const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        return `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+      }
+      return url;
+    }
+
+    function formatSecondsToMMSS(sec) {
+      if (sec === null || sec === undefined || isNaN(sec) || sec < 0) return "";
+      const totalSec = Math.floor(Number(sec));
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function parseMMSSToSeconds(str) {
+      const clean = String(str || "").trim();
+      if (!clean) return null;
+      if (/^\d+(\.\d+)?$/.test(clean)) return parseFloat(clean);
+      const parts = clean.split(":").map(Number);
+      if (parts.some(isNaN)) return null;
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      return null;
+    }
+
+    function setupMediaPlayerForCurrentLesson() {
+      stopSegmentLoopTimer();
+      const lesson = getCurrentLesson();
+      const rawUrl = state.localBlobUrl || (lesson ? (lesson.mediaUrl || "").trim() : "");
+
+      document.getElementById("inlineMediaUrlInput").value = lesson ? (lesson.mediaUrl || "") : "";
+
+      const ytWrap = document.getElementById("ytPlayerWrapper");
+      const vidEl = document.getElementById("html5VideoPlayer");
+      const audWrap = document.getElementById("html5AudioWrapper");
+      const audEl = document.getElementById("html5AudioPlayer");
+      const noMediaEl = document.getElementById("noMediaPlaceholder");
+
+      ytWrap.classList.add("hidden");
+      vidEl.classList.add("hidden");
+      audWrap.classList.add("hidden");
+      noMediaEl.classList.add("hidden");
+
+      try { vidEl.pause(); } catch (e) {}
+      try { audEl.pause(); } catch (e) {}
+
+      if (!rawUrl) {
+        state.activeMediaType = "none";
+        noMediaEl.classList.remove("hidden");
+        startMediaMonitorLoop();
+        return;
+      }
+
+      const ytId = extractYouTubeId(rawUrl);
+      if (ytId) {
+        state.activeMediaType = "youtube";
+        ytWrap.classList.remove("hidden");
+        if (isYtApiReady) {
+          initOrLoadYouTubeVideo(ytId);
+        } else {
+          pendingYtVideoId = ytId;
+        }
+      } else {
+        const directUrl = normalizeDirectMediaUrl(rawUrl);
+        const isAudio = /\.(mp3|wav|ogg|m4a|aac)(\?|$)/i.test(directUrl);
+        if (isAudio) {
+          state.activeMediaType = "audio";
+          audWrap.classList.remove("hidden");
+          audEl.src = directUrl;
+          audEl.playbackRate = state.playbackRate;
+        } else {
+          state.activeMediaType = "video";
+          vidEl.classList.remove("hidden");
+          vidEl.src = directUrl;
+          vidEl.playbackRate = state.playbackRate;
+        }
+      }
+
+      startMediaMonitorLoop();
+    }
+
+    function initOrLoadYouTubeVideo(videoId) {
+      if (ytPlayer && typeof ytPlayer.cueVideoById === "function") {
+        ytPlayer.cueVideoById(videoId);
+        ytPlayer.setPlaybackRate(state.playbackRate);
+        return;
+      }
+
+      ytPlayer = new YT.Player("ytPlayerIframe", {
+        height: "100%",
+        width: "100%",
+        videoId: videoId,
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+          playsinline: 1
+        },
+        events: {
+          onReady: () => {
+            ytPlayer.setPlaybackRate(state.playbackRate);
+          }
+        }
+      });
+    }
+
+    function getCurrentMediaTime() {
+      if (state.activeMediaType === "youtube" && ytPlayer && typeof ytPlayer.getCurrentTime === "function") {
+        return ytPlayer.getCurrentTime() || 0;
+      }
+      if (state.activeMediaType === "video") {
+        return document.getElementById("html5VideoPlayer").currentTime || 0;
+      }
+      if (state.activeMediaType === "audio") {
+        return document.getElementById("html5AudioPlayer").currentTime || 0;
+      }
+      return 0;
+    }
+
+    function seekAndPlayMedia(seconds) {
+      const target = Math.max(0, Number(seconds) || 0);
+      if (state.activeMediaType === "youtube" && ytPlayer && typeof ytPlayer.seekTo === "function") {
+        ytPlayer.seekTo(target, true);
+        ytPlayer.setPlaybackRate(state.playbackRate);
+        ytPlayer.playVideo();
+      } else if (state.activeMediaType === "video") {
+        const v = document.getElementById("html5VideoPlayer");
+        v.currentTime = target;
+        v.playbackRate = state.playbackRate;
+        v.play().catch(() => {});
+      } else if (state.activeMediaType === "audio") {
+        const a = document.getElementById("html5AudioPlayer");
+        a.currentTime = target;
+        a.playbackRate = state.playbackRate;
+        a.play().catch(() => {});
+      } else {
+        showToast("Chưa có Link Video/Audio. Hãy bấm 'Đổi Link / File nghe' để thêm nhé!", "info");
+      }
+    }
+
+    function pauseMedia() {
+      if (state.activeMediaType === "youtube" && ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+        ytPlayer.pauseVideo();
+      } else if (state.activeMediaType === "video") {
+        document.getElementById("html5VideoPlayer").pause();
+      } else if (state.activeMediaType === "audio") {
+        document.getElementById("html5AudioPlayer").pause();
+      }
+    }
+
+    function isMediaPlaying() {
+      if (state.activeMediaType === "youtube" && ytPlayer && typeof ytPlayer.getPlayerState === "function") {
+        return ytPlayer.getPlayerState() === YT.PlayerState.PLAYING;
+      }
+      if (state.activeMediaType === "video") {
+        const v = document.getElementById("html5VideoPlayer");
+        return !v.paused && !v.ended;
+      }
+      if (state.activeMediaType === "audio") {
+        const a = document.getElementById("html5AudioPlayer");
+        return !a.paused && !a.ended;
+      }
+      return false;
+    }
+
+    function applyPlaybackRate(rate) {
+      state.playbackRate = rate;
+      if (state.activeMediaType === "youtube" && ytPlayer && typeof ytPlayer.setPlaybackRate === "function") {
+        ytPlayer.setPlaybackRate(rate);
+      } else if (state.activeMediaType === "video") {
+        document.getElementById("html5VideoPlayer").playbackRate = rate;
+      } else if (state.activeMediaType === "audio") {
+        document.getElementById("html5AudioPlayer").playbackRate = rate;
+      }
+      renderPlayerControlsUI();
+    }
+
+    function getActiveSegmentBounds() {
+      const lesson = getCurrentLesson();
+      if (!lesson) return { start: 0, end: null };
+
+      if (state.scope === "all") {
+        const tsList = lesson.timestamps || [];
+        const firstStart = tsList[0]?.start ?? 0;
+        const lastEnd = tsList[tsList.length - 1]?.end ?? null;
+        return { start: firstStart, end: lastEnd };
+      }
+
+      const idx = parseInt(state.scope, 10);
+      const ts = (lesson.timestamps || [])[idx] || { start: 0, end: null };
+      return {
+        start: ts.start !== undefined && ts.start !== null ? Number(ts.start) : 0,
+        end: ts.end !== undefined && ts.end !== null ? Number(ts.end) : null
+      };
+    }
+
+    function updateSegmentTimestamp(field, secondsVal) {
+      const lesson = getCurrentLesson();
+      if (!lesson || state.scope === "all") return;
+
+      const idx = parseInt(state.scope, 10);
+      if (!Array.isArray(lesson.timestamps)) {
+        lesson.timestamps = [];
+      }
+      while (lesson.timestamps.length <= idx) {
+        lesson.timestamps.push({ start: 0, end: null });
+      }
+      lesson.timestamps[idx][field] = secondsVal;
+
+      if (!lesson.isSample) {
+        saveLessonsToStorage();
+        if ((state.settings.googleScriptUrl || "").trim()) {
+          pushToGoogleSheets("saveLesson", lesson);
+        }
+      }
+      renderPlayerControlsUI();
+    }
+
+    function playCurrentSegment() {
+      clearTimeout(state.loopTimeoutId);
+      document.getElementById("loopCountdownText").classList.add("hidden");
+      const bounds = getActiveSegmentBounds();
+      seekAndPlayMedia(bounds.start);
+    }
+
+    function stopSegmentLoopTimer() {
+      clearTimeout(state.loopTimeoutId);
+      document.getElementById("loopCountdownText").classList.add("hidden");
+    }
+
+    function startMediaMonitorLoop() {
+      if (state.segmentMonitorTimer) {
+        clearInterval(state.segmentMonitorTimer);
+      }
+
+      state.segmentMonitorTimer = setInterval(() => {
+        const curTime = getCurrentMediaTime();
+        document.getElementById("playerCurrentTimeBadge").textContent = formatSecondsToMMSS(curTime) || "00:00";
+
+        if (!isMediaPlaying()) return;
+
+        const bounds = getActiveSegmentBounds();
+        if (bounds.end !== null && bounds.end > bounds.start && curTime >= bounds.end) {
+          pauseMedia();
+          if (state.isLoopingSegment) {
+            const cdEl = document.getElementById("loopCountdownText");
+            cdEl.classList.remove("hidden");
+            cdEl.textContent = "Đang nghỉ 3 giây để con viết vở...";
+            clearTimeout(state.loopTimeoutId);
+            state.loopTimeoutId = setTimeout(() => {
+              cdEl.classList.add("hidden");
+              if (state.isLoopingSegment) {
+                seekAndPlayMedia(bounds.start);
+              }
+            }, 3000);
+          }
+        }
+      }, 300);
+    }
+
+    function renderPlayerControlsUI() {
+      const bounds = getActiveSegmentBounds();
+      const scopeName = state.scope === "all" ? "Cả bài" : `Đoạn ${parseInt(state.scope, 10) + 1}`;
+      document.getElementById("timestampScopeLabel").textContent = `Mốc thời gian ${scopeName}:`;
+
+      const startInp = document.getElementById("segStartInput");
+      const endInp = document.getElementById("segEndInput");
+      const capStartBtn = document.getElementById("captureStartBtn");
+      const capEndBtn = document.getElementById("captureEndBtn");
+
+      startInp.value = formatSecondsToMMSS(bounds.start);
+      endInp.value = formatSecondsToMMSS(bounds.end);
+
+      const isAll = state.scope === "all";
+      startInp.disabled = isAll;
+      endInp.disabled = isAll;
+      capStartBtn.disabled = isAll;
+      capEndBtn.disabled = isAll;
+
+      const loopBtn = document.getElementById("loopSegmentBtn");
+      if (state.isLoopingSegment) {
+        loopBtn.className = "px-3.5 py-2.5 rounded-xl border border-accent-500 bg-accent-500 text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-1.5";
+        loopBtn.innerHTML = `<span>🔁 Lặp lại đoạn (nghỉ 3s): BẬT</span>`;
+      } else {
+        loopBtn.className = "px-3.5 py-2.5 rounded-xl border border-brand-200 bg-white hover:bg-brand-50 text-brand-800 text-xs sm:text-sm font-bold transition flex items-center gap-1.5";
+        loopBtn.innerHTML = `<span>🔁 Lặp lại đoạn (nghỉ 3s): TẮT</span>`;
+      }
+
+      document.querySelectorAll(".rate-btn").forEach(btn => {
+        const isAct = parseFloat(btn.dataset.rate) === state.playbackRate;
+        btn.className = `rate-btn px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+          isAct ? "bg-brand-700 text-white" : "text-slate-600 hover:bg-slate-100"
+        }`;
+      });
+    }
+
+    // =========================================================================
+    // 6. THUẬT TOÁN TẠO ĐỀ KHUYẾT TỪ / CỤM TỪ / CÂU
+    // =========================================================================
+    function generateExercise() {
+      const lesson = getCurrentLesson();
+      if (!lesson) return;
+
+      let selectedIndices = [];
+      if (state.scope === "all") {
+        selectedIndices = lesson.paragraphs.map((_, idx) => idx);
+      } else {
+        const idx = parseInt(state.scope, 10);
+        if (!isNaN(idx) && lesson.paragraphs[idx] !== undefined) {
+          selectedIndices = [idx];
+        } else {
+          state.scope = "0";
+          selectedIndices = [0];
+        }
+      }
+
+      let blankCounter = 1;
+      const newBlanks = [];
+      const renderedParagraphs = [];
+
+      const densityMap = {
+        word: { low: 0.14, medium: 0.24, high: 0.36 },
+        phrase: { low: 0.12, medium: 0.20, high: 0.30 },
+        sentence: { low: 0.25, medium: 0.45, high: 0.65 }
+      };
+      const targetRatio = densityMap[state.mode][state.density];
+
+      selectedIndices.forEach(pIdx => {
+        const text = lesson.paragraphs[pIdx];
+
+        if (state.mode === "sentence") {
+          const sentences = text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [text];
+          const candidateIndices = sentences
+            .map((s, i) => ({ s: s.trim(), i }))
+            .filter(item => item.s.split(/\s+/).length >= 3);
+
+          const numToHide = Math.max(1, Math.round(candidateIndices.length * targetRatio));
+          const chosenSet = new Set(pickRandomSubset(candidateIndices.map(c => c.i), numToHide));
+
+          const segments = sentences.map((rawSent, sIdx) => {
+            const leadingSpace = rawSent.match(/^\s*/)[0];
+            const trailingSpace = rawSent.match(/\s*$/)[0];
+            const coreSent = rawSent.trim();
+
+            if (chosenSet.has(sIdx) && coreSent.length > 0) {
+              const endPunctMatch = coreSent.match(/([.!?]+)$/);
+              const endPunct = endPunctMatch ? endPunctMatch[1] : "";
+              const cleanAnswer = endPunct ? coreSent.slice(0, -endPunct.length) : coreSent;
+
+              const blankObj = {
+                index: blankCounter++,
+                answer: cleanAnswer,
+                letterCount: cleanAnswer.replace(/[^a-zA-Z0-9]/g, "").length,
+                wordCount: cleanAnswer.split(/\s+/).length,
+                userValue: ""
+              };
+              newBlanks.push(blankObj);
+              return [
+                { type: "text", content: leadingSpace },
+                { type: "blank", blank: blankObj },
+                { type: "text", content: endPunct + trailingSpace }
+              ];
+            }
+            return [{ type: "text", content: rawSent }];
+          }).flat();
+
+          renderedParagraphs.push({ pNumber: pIdx + 1, segments });
+        } else {
+          const tokens = text.match(/[a-zA-Z0-9]+(?:['’-][a-zA-Z0-9]+)*|[^a-zA-Z0-9]+/g) || [text];
+          const wordPositions = [];
+          const kwSet = new Set((lesson.keywords || []).map(k => k.toLowerCase()));
+
+          tokens.forEach((tok, idx) => {
+            if (/^[a-zA-Z]/.test(tok)) {
+              const lower = tok.toLowerCase();
+              const isKeyword = kwSet.has(lower);
+              const isContentWord = !STOP_WORDS.has(lower) && tok.length >= 3;
+              const weight = isKeyword ? 4 : (isContentWord ? 2 : 0.4);
+              wordPositions.push({ tokenIdx: idx, word: tok, weight });
+            }
+          });
+
+          if (state.mode === "word") {
+            const numToHide = Math.max(1, Math.round(wordPositions.length * targetRatio));
+            const chosenTokenIndices = new Set();
+
+            const pool = [...wordPositions];
+            while (chosenTokenIndices.size < numToHide && pool.length > 0) {
+              const picked = weightedRandomPick(pool);
+              const idxInPool = pool.findIndex(p => p.tokenIdx === picked.tokenIdx);
+              pool.splice(idxInPool, 1);
+
+              const tooClose = Array.from(chosenTokenIndices).some(existing => Math.abs(existing - picked.tokenIdx) <= 2);
+              if (!tooClose) {
+                chosenTokenIndices.add(picked.tokenIdx);
+              }
+            }
+
+            const segments = tokens.map((tok, idx) => {
+              if (chosenTokenIndices.has(idx)) {
+                const blankObj = {
+                  index: blankCounter++,
+                  answer: tok,
+                  letterCount: tok.replace(/[^a-zA-Z0-9]/g, "").length,
+                  wordCount: 1,
+                  userValue: ""
+                };
+                newBlanks.push(blankObj);
+                return { type: "blank", blank: blankObj };
+              }
+              return { type: "text", content: tok };
+            });
+
+            renderedParagraphs.push({ pNumber: pIdx + 1, segments });
+          } else if (state.mode === "phrase") {
+            const numPhrases = Math.max(1, Math.round((wordPositions.length * targetRatio) / 2.6));
+            const blockedTokens = new Set();
+            const phraseRanges = [];
+
+            const shuffledStarts = pickRandomSubset(wordPositions, wordPositions.length);
+            for (const startItem of shuffledStarts) {
+              if (phraseRanges.length >= numPhrases) break;
+
+              const phraseLen = Math.floor(Math.random() * 3) + 2;
+              const startPosInWords = wordPositions.findIndex(w => w.tokenIdx === startItem.tokenIdx);
+              if (startPosInWords === -1 || startPosInWords + phraseLen - 1 >= wordPositions.length) continue;
+
+              const endItem = wordPositions[startPosInWords + phraseLen - 1];
+              let crossesPunct = false;
+              for (let t = startItem.tokenIdx; t <= endItem.tokenIdx; t++) {
+                if (blockedTokens.has(t) || /[.!?;:,]/.test(tokens[t])) {
+                  crossesPunct = true;
+                  break;
+                }
+              }
+              if (crossesPunct) continue;
+
+              for (let t = startItem.tokenIdx - 2; t <= endItem.tokenIdx + 2; t++) {
+                blockedTokens.add(t);
+              }
+              phraseRanges.push({ startToken: startItem.tokenIdx, endToken: endItem.tokenIdx });
+            }
+
+            phraseRanges.sort((a, b) => a.startToken - b.startToken);
+
+            const segments = [];
+            let cursor = 0;
+            for (const range of phraseRanges) {
+              while (cursor < range.startToken) {
+                segments.push({ type: "text", content: tokens[cursor] });
+                cursor++;
+              }
+              const phraseText = tokens.slice(range.startToken, range.endToken + 1).join("");
+              const blankObj = {
+                index: blankCounter++,
+                answer: phraseText,
+                letterCount: phraseText.replace(/[^a-zA-Z0-9]/g, "").length,
+                wordCount: phraseText.trim().split(/\s+/).length,
+                userValue: ""
+              };
+              newBlanks.push(blankObj);
+              segments.push({ type: "blank", blank: blankObj });
+              cursor = range.endToken + 1;
+            }
+            while (cursor < tokens.length) {
+              segments.push({ type: "text", content: tokens[cursor] });
+              cursor++;
+            }
+
+            renderedParagraphs.push({ pNumber: pIdx + 1, segments });
+          }
+        }
+      });
+
+      state.renderedParagraphs = renderedParagraphs;
+      state.blanks = newBlanks;
+
+      document.getElementById("notebookGradingArea").classList.add("hidden");
+      document.getElementById("notebookResultBox").classList.add("hidden");
+      document.getElementById("typingScoreBanner").classList.add("hidden");
+
+      renderAll();
+    }
+
+    function pickRandomSubset(arr, count) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, count);
+    }
+
+    function weightedRandomPick(items) {
+      const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
+      let r = Math.random() * totalWeight;
+      for (const item of items) {
+        r -= item.weight;
+        if (r <= 0) return item;
+      }
+      return items[items.length - 1];
+    }
+
+    // =========================================================================
+    // 7. RENDER GIAO DIỆN CHÍNH & CÁC VIEW
+    // =========================================================================
+    function renderAll() {
+      renderMainNavigation();
+      renderSyncBadge();
+
+      if (state.mainView === "practice") {
+        renderLessonSelector();
+        renderControls();
+        renderPlayerControlsUI();
+        renderPassage();
+        renderAnswerKey();
+        renderWordBank();
+        renderSubTabs();
+      } else if (state.mainView === "progress") {
+        renderProgressView();
+      } else if (state.mainView === "settings") {
+        renderSettingsView();
+      }
+    }
+
+    function renderMainNavigation() {
+      const views = {
+        practice: { btn: document.getElementById("navPracticeBtn"), view: document.getElementById("viewPractice") },
+        progress: { btn: document.getElementById("navProgressBtn"), view: document.getElementById("viewProgress") },
+        settings: { btn: document.getElementById("navSettingsBtn"), view: document.getElementById("viewSettings") }
+      };
+
+      Object.keys(views).forEach(key => {
+        const isActive = state.mainView === key;
+        const { btn, view } = views[key];
+        if (isActive) {
+          btn.className = "nav-main-btn py-2.5 px-2 text-xs sm:text-sm font-extrabold border-b-2 border-brand-700 text-brand-700 transition flex items-center justify-center gap-1.5";
+          view.classList.remove("hidden");
+        } else {
+          btn.className = "nav-main-btn py-2.5 px-2 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5";
+          view.classList.add("hidden");
+        }
+      });
+    }
+
+    function renderSyncBadge() {
+      const pill = document.getElementById("syncStatusPill");
+      const hasSheets = Boolean((state.settings.googleScriptUrl || "").trim());
+      if (hasSheets) {
+        pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-emerald-700">Đã nối Google Sheets</span>`;
+        pill.className = "hidden md:inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200";
+      } else {
+        pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span><span>Lưu trên máy</span>`;
+        pill.className = "hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-600";
+      }
+    }
+
+    function renderLessonSelector() {
+      const select = document.getElementById("lessonSelect");
+      const current = getCurrentLesson();
+
+      select.innerHTML = state.lessons
+        .map(l => `<option value="${l.id}" ${l.id === current.id ? "selected" : ""}>${escapeHtml(l.title)}</option>`)
+        .join("");
+
+      document.getElementById("lessonMetaBadge").textContent = `${current.paragraphs.length} đoạn văn`;
+
+      const deleteBtn = document.getElementById("deleteLessonBtn");
+      if (current.isSample) {
+        deleteBtn.classList.add("hidden");
+      } else {
+        deleteBtn.classList.remove("hidden");
+      }
+    }
+
+    function renderControls() {
+      const lesson = getCurrentLesson();
+      const scopeContainer = document.getElementById("scopePills");
+
+      const buttons = lesson.paragraphs.map((_, idx) => {
+        const active = state.scope === String(idx);
+        return `
+          <button
+            type="button"
+            data-scope="${idx}"
+            class="scope-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition ${
+              active
+                ? "bg-brand-700 text-white border-brand-700 shadow-sm"
+                : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+            }"
+          >
+            Đoạn ${idx + 1}
+          </button>
+        `;
+      });
+
+      const allActive = state.scope === "all";
+      buttons.push(`
+        <button
+          type="button"
+          data-scope="all"
+          class="scope-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition ${
+            allActive
+              ? "bg-brand-700 text-white border-brand-700 shadow-sm"
+              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          }"
+        >
+          Cả bài (${lesson.paragraphs.length} đoạn)
+        </button>
+      `);
+
+      scopeContainer.innerHTML = buttons.join("");
+
+      document.querySelectorAll(".mode-btn").forEach(btn => {
+        const isActive = btn.dataset.mode === state.mode;
+        btn.className = `mode-btn py-2.5 px-2 sm:px-3 rounded-xl border text-xs sm:text-sm font-bold transition text-center ${
+          isActive
+            ? "bg-brand-700 text-white border-brand-700 shadow-sm"
+            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+        }`;
+      });
+
+      document.querySelectorAll(".density-btn").forEach(btn => {
+        const isActive = btn.dataset.density === state.density;
+        btn.className = `density-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${
+          isActive
+            ? "bg-white text-brand-700 shadow-sm"
+            : "text-slate-600 hover:text-slate-900"
+        }`;
+      });
+
+      document.getElementById("showLetterCountToggle").checked = state.showLetterCount;
+      document.getElementById("blankCountBadge").textContent = `Có ${state.blanks.length} chỗ trống cần điền`;
+
+      const wbBtn = document.getElementById("toggleWordBankBtn");
+      if (state.activeTab === "typing") {
+        wbBtn.classList.remove("hidden");
+      } else {
+        wbBtn.classList.add("hidden");
+        state.showWordBank = false;
+      }
+    }
+
+    function renderPassage() {
+      const container = document.getElementById("passageContainer");
+
+      container.innerHTML = state.renderedParagraphs.map(pObj => {
+        const innerHtml = pObj.segments.map(seg => {
+          if (seg.type === "text") {
+            return escapeHtml(seg.content);
+          }
+
+          const b = seg.blank;
+          const hintText = state.showLetterCount
+            ? (b.wordCount > 1 ? ` (${b.wordCount} từ)` : ` (${b.letterCount} chữ)`)
+            : "";
+
+          if (state.activeTab === "typing") {
+            const widthCh = Math.min(Math.max(b.answer.length + 3, 9), 34);
+            return `
+              <span class="inline-input-wrap">
+                <span class="text-xs font-extrabold text-brand-700 bg-brand-100 px-1.5 py-0.5 rounded">(${b.index})</span>
+                <input
+                  type="text"
+                  data-blank-index="${b.index}"
+                  value="${escapeHtml(b.userValue)}"
+                  placeholder="${hintText.trim() || "..."}"
+                  style="width: ${widthCh}ch; max-width: 82vw;"
+                  class="inline-input"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                />
+                <span id="feedback-inline-${b.index}" class="text-xs font-bold"></span>
+              </span>
+            `;
+          } else {
+            const underscores = b.wordCount > 1 ? "____________" : "________";
+            return `
+              <span class="blank-pill">
+                <span class="blank-num">${b.index}</span>
+                <span>${underscores}${escapeHtml(hintText)}</span>
+              </span>
+            `;
+          }
+        }).join("");
+
+        return `
+          <div class="relative pl-0 sm:pl-1">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-extrabold mr-1.5 align-middle">
+              ${pObj.pNumber}
+            </span>
+            <span>${innerHtml}</span>
+          </div>
+        `;
+      }).join("");
+
+      if (state.activeTab === "typing") {
+        container.querySelectorAll(".inline-input").forEach(input => {
+          input.addEventListener("input", e => {
+            const idx = parseInt(e.target.dataset.blankIndex, 10);
+            const targetBlank = state.blanks.find(b => b.index === idx);
+            if (targetBlank) targetBlank.userValue = e.target.value;
+          });
+        });
+      }
+    }
+
+    function renderWordBank() {
+      const drawer = document.getElementById("wordBankDrawer");
+      const list = document.getElementById("wordBankList");
+
+      if (state.showWordBank && state.activeTab === "typing") {
+        drawer.classList.remove("hidden");
+        const shuffled = pickRandomSubset(state.blanks.map(b => b.answer), state.blanks.length);
+        list.innerHTML = shuffled.map(w => `
+          <span class="px-3 py-1 rounded-lg bg-white border border-amber-300 text-slate-800 text-xs sm:text-sm font-bold shadow-xs">
+            ${escapeHtml(w)}
+          </span>
+        `).join("");
+      } else {
+        drawer.classList.add("hidden");
+      }
+    }
+
+    function renderAnswerKey() {
+      const drawer = document.getElementById("answerKeyDrawer");
+      const btnText = document.getElementById("toggleShowAnswersText");
+      const list = document.getElementById("answerKeyList");
+
+      if (state.showAnswers) {
+        drawer.classList.remove("hidden");
+        btnText.textContent = "🙈 Ẩn đáp án gốc";
+      } else {
+        drawer.classList.add("hidden");
+        btnText.textContent = "👁️ Xem đáp án gốc";
+      }
+
+      list.innerHTML = state.blanks.map(b => `
+        <div class="bg-white border border-emerald-200 rounded-xl px-3 py-2 flex items-baseline gap-2">
+          <span class="font-extrabold text-brand-700 text-xs">(${b.index})</span>
+          <span class="font-bold text-emerald-900">${escapeHtml(b.answer)}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderSubTabs() {
+      const nbBtn = document.getElementById("tabNotebookBtn");
+      const tpBtn = document.getElementById("tabTypingBtn");
+      const nbContent = document.getElementById("tabNotebookContent");
+      const tpContent = document.getElementById("tabTypingContent");
+
+      if (state.activeTab === "notebook") {
+        nbBtn.className = "py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 border-brand-700 bg-white text-brand-700 transition";
+        tpBtn.className = "py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition";
+        nbContent.classList.remove("hidden");
+        tpContent.classList.add("hidden");
+      } else {
+        tpBtn.className = "py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 border-brand-700 bg-white text-brand-700 transition";
+        nbBtn.className = "py-3.5 px-3 sm:px-5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition";
+        tpContent.classList.remove("hidden");
+        nbContent.classList.add("hidden");
+      }
+    }
+
+    // =========================================================================
+    // 8. RENDER VIEW TIẾN BỘ THEO NGÀY (CHART.JS) & KHO TỪ VIẾT SAI
+    // =========================================================================
+    function renderProgressView() {
+      const results = state.results || [];
+
+      const totalSessions = results.length;
+      const avgAccuracy = totalSessions > 0
+        ? Math.round(results.reduce((s, r) => s + Number(r.percent || 0), 0) / totalSessions)
+        : 0;
+
+      const uniqueDates = Array.from(new Set(results.map(r => r.dateISO))).sort().reverse();
+      let streak = 0;
+      if (uniqueDates.length > 0) {
+        const today = new Date();
+        const yesterday = new Date(Date.now() - 86400000);
+        const fmt = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+        let expectedDateStr = uniqueDates[0] === fmt(today) ? fmt(today) : (uniqueDates[0] === fmt(yesterday) ? fmt(yesterday) : null);
+        if (expectedDateStr) {
+          let cursorTime = new Date(expectedDateStr + "T00:00:00").getTime();
+          const dateSet = new Set(uniqueDates);
+          while (true) {
+            const dObj = new Date(cursorTime);
+            const key = fmt(dObj);
+            if (dateSet.has(key)) {
+              streak++;
+              cursorTime -= 86400000;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+
+      document.getElementById("kpiTotalSessions").textContent = `${totalSessions} bài`;
+      document.getElementById("kpiAvgAccuracy").textContent = `${avgAccuracy}%`;
+      document.getElementById("kpiStreakDays").textContent = `${streak} ngày`;
+
+      // Biểu đồ Chart.js
+      const chartWrapper = document.getElementById("chartWrapper");
+      const emptyMsg = document.getElementById("emptyChartMsg");
+
+      if (results.length === 0) {
+        chartWrapper.classList.add("hidden");
+        emptyMsg.classList.remove("hidden");
+        if (progressChartInstance) {
+          progressChartInstance.destroy();
+          progressChartInstance = null;
+        }
+      } else {
+        chartWrapper.classList.remove("hidden");
+        emptyMsg.classList.add("hidden");
+
+        const byDayMap = new Map();
+        results.forEach(r => {
+          const key = r.dateISO || r.dateVN;
+          if (!byDayMap.has(key)) {
+            byDayMap.set(key, {
+              dateISO: key,
+              dateLabel: (r.dateVN || key).slice(0, 5),
+              totalPercent: 0,
+              count: 0
+            });
+          }
+          const item = byDayMap.get(key);
+          item.totalPercent += Number(r.percent || 0);
+          item.count += 1;
+        });
+
+        const dailyList = Array.from(byDayMap.values())
+          .sort((a, b) => String(a.dateISO).localeCompare(String(b.dateISO)))
+          .slice(-14);
+
+        const labels = dailyList.map(d => d.dateLabel);
+        const dataPoints = dailyList.map(d => Math.round(d.totalPercent / d.count));
+        const bgColors = dataPoints.map(v =>
+          v >= 80 ? "#10b981" : (v >= 50 ? "#f59e0b" : "#f43f5e")
+        );
+
+        const ctx = document.getElementById("dailyProgressCanvas").getContext("2d");
+        if (progressChartInstance) {
+          progressChartInstance.destroy();
+        }
+
+        if (typeof window.Chart === "function") {
+          progressChartInstance = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Tỷ lệ chính xác trung bình (%)",
+                  data: dataPoints,
+                  backgroundColor: bgColors,
+                  borderRadius: 8,
+                  maxBarThickness: 42
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: context => {
+                      const idx = context.dataIndex;
+                      const count = dailyList[idx]?.count || 1;
+                      return `Đạt ${context.parsed.y}% (${count} bài luyện)`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    callback: val => val + "%"
+                  },
+                  grid: {
+                    color: "#f1f5f9"
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      // Kho từ hay viết sai
+      const missedFreq = new Map();
+      results.forEach(r => {
+        (r.wrongWords || []).forEach(w => {
+          const clean = String(w).trim();
+          if (clean) {
+            missedFreq.set(clean, (missedFreq.get(clean) || 0) + 1);
+          }
+        });
+      });
+
+      const missedListEl = document.getElementById("missedWordsList");
+      const practiceMissedBtn = document.getElementById("practiceMissedWordsBtn");
+
+      if (missedFreq.size === 0) {
+        missedListEl.innerHTML = `<span class="text-sm text-slate-400 italic">Chưa có từ viết sai nào được ghi nhận.</span>`;
+        practiceMissedBtn.classList.add("hidden");
+      } else {
+        const sortedMissed = Array.from(missedFreq.entries()).sort((a, b) => b[1] - a[1]);
+        practiceMissedBtn.classList.remove("hidden");
+        missedListEl.innerHTML = sortedMissed.map(([word, count]) => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-bold">
+            <span>${escapeHtml(word)}</span>
+            ${count > 1 ? `<span class="bg-rose-600 text-white text-[10px] px-1.5 py-0.2 rounded-full">x${count}</span>` : ""}
+          </span>
+        `).join("");
+      }
+
+      // Bảng lịch sử chi tiết
+      const tbody = document.getElementById("historyTableBody");
+      if (results.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-400 text-sm">Chưa có lịch sử làm bài.</td>
+          </tr>
+        `;
+      } else {
+        const reversed = [...results].reverse();
+        tbody.innerHTML = reversed.map(r => {
+          const pct = Number(r.percent || 0);
+          const badgeClass = pct >= 80
+            ? "bg-emerald-100 text-emerald-800"
+            : (pct >= 50 ? "bg-amber-100 text-amber-800" : "bg-rose-100 text-rose-800");
+
+          const wrongStr = (r.wrongWords && r.wrongWords.length > 0)
+            ? r.wrongWords.join(", ")
+            : "Không có";
+
+          return `
+            <tr class="hover:bg-slate-50/80">
+              <td class="py-3 px-4 font-bold text-slate-700 whitespace-nowrap">${escapeHtml(r.dateVN || r.dateISO)}</td>
+              <td class="py-3 px-4">
+                <div class="font-bold text-slate-900 line-clamp-1">${escapeHtml(r.lessonTitle || "")}</div>
+                <div class="text-xs text-slate-500">${escapeHtml(r.scopeLabel || "")}</div>
+              </td>
+              <td class="py-3 px-4 text-xs font-semibold text-slate-600 whitespace-nowrap">${escapeHtml(r.modeLabel || "")}</td>
+              <td class="py-3 px-4 text-center font-extrabold text-slate-800 whitespace-nowrap">${r.correct}/${r.total}</td>
+              <td class="py-3 px-4 text-center whitespace-nowrap">
+                <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${badgeClass}">${pct}%</span>
+              </td>
+              <td class="py-3 px-4 text-xs text-rose-700 font-medium">${escapeHtml(wrongStr)}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+    }
+
+    function renderSettingsView() {
+      document.getElementById("geminiApiKeyInput").value = state.settings.geminiApiKey || "";
+      document.getElementById("googleScriptUrlInput").value = state.settings.googleScriptUrl || "";
+    }
+
+    // =========================================================================
+    // 9. TÍCH HỢP GEMINI VISION API (NHIỀU ẢNH TRANG SÁCH & NHIỀU ẢNH VỞ)
+    // =========================================================================
+    async function callGeminiWithRetry(payload, maxRetries = 3) {
+      const key = getEffectiveGeminiKey();
+      if (!key) {
+        throw new Error("MISSING_API_KEY");
+      }
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`;
+      let delay = 1000;
+
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          return await response.json();
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+          await new Promise(res => setTimeout(res, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result;
+          const base64Data = result.split(",")[1];
+          resolve({
+            mimeType: file.type || "image/jpeg",
+            data: base64Data,
+            dataUrl: result
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Xử lý chọn nhiều ảnh trang sách trong Modal Tạo bài mới
+    async function handleSelectedBookImages(fileList) {
+      const files = Array.from(fileList || []);
+      if (files.length === 0) return;
+
+      state.pendingBookFiles = files;
+
+      const grid = document.getElementById("selectedBookImagesGrid");
+      grid.classList.remove("hidden");
+      grid.classList.add("grid");
+      grid.innerHTML = files.map((f, idx) => {
+        const url = URL.createObjectURL(f);
+        return `
+          <div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-[3/4]">
+            <img src="${url}" alt="Trang ${idx + 1}" class="w-full h-full object-cover" />
+            <span class="absolute top-1.5 left-1.5 bg-brand-900/85 text-white text-[11px] font-extrabold px-2 py-0.5 rounded-lg">
+              Trang ${idx + 1}
+            </span>
+          </div>
+        `;
+      }).join("");
+
+      const statusBadge = document.getElementById("qrScanStatusBadge");
+      statusBadge.className = "text-xs font-bold text-amber-600";
+      statusBadge.textContent = "Đang quét mã QR trên ảnh...";
+
+      const qrUrl = await scanQrAcrossFiles(files);
+      const mediaInput = document.getElementById("newLessonMediaUrlInput");
+
+      if (qrUrl) {
+        mediaInput.value = qrUrl;
+        statusBadge.className = "text-xs font-extrabold text-emerald-600";
+        statusBadge.textContent = "✓ Đã quét thấy Link từ QR!";
+        showToast("Đã tự động lấy được Link Video/Audio từ mã QR trên trang sách!", "success");
+      } else {
+        statusBadge.className = "text-xs font-semibold text-slate-500";
+        statusBadge.textContent = "Không thấy mã QR (có thể dán link thủ công)";
+      }
+    }
+
+    // Gửi đồng thời tất cả các trang sách đã chọn lên Gemini API
+    async function submitCreateLessonFromImages() {
+      if (state.pendingBookFiles.length === 0) {
+        showToast("Bạn hãy chọn ít nhất 1 ảnh trang sách trước nhé!", "error");
+        return;
+      }
+
+      const customTitle = document.getElementById("newLessonTitleInput").value.trim();
+      const mediaUrl = document.getElementById("newLessonMediaUrlInput").value.trim();
+
+      document.getElementById("createImagesModal").classList.add("hidden");
+      const overlay = document.getElementById("ocrOverlay");
+      overlay.classList.remove("hidden");
+
+      try {
+        const base64Images = await Promise.all(state.pendingBookFiles.map(f => fileToBase64(f)));
+
+        const prompt = `Bạn là trợ lý số hóa sách giáo khoa tiếng Anh lớp 6.
+Người dùng gửi lên ${base64Images.length} ảnh trang sách theo đúng thứ tự từ trang đầu đến trang sau.
+Hãy đọc toàn bộ các ảnh này và trích xuất chính xác văn bản tiếng Anh chính (bài đọc / bài nghe):
+1. Nếu một đoạn văn bị ngắt dở ở cuối trang 1 và viết tiếp ở đầu trang 2, hãy tự động nối liền mạch thành một đoạn văn hoàn chỉnh.
+2. Chia bài thành từng đoạn rõ ràng theo đúng bố cục hoặc số thứ tự (1, 2, 3, 4...) trong sách.
+3. Loại bỏ các số chú thích nhỏ dính trên đầu từ (ví dụ: cartoons1 -> cartoons, overweight2 -> overweight), bỏ số trang, bỏ khung giải nghĩa từ vựng cuối trang và bỏ các câu hỏi bài tập bên ngoài đoạn văn chính.
+4. Khôi phục từ đúng nếu có chỗ bị bôi đen nhẹ nhưng đoán được chính xác theo ngữ cảnh.
+5. Liệt kê danh sách từ vựng trọng tâm / từ in đậm vào mảng keywords.
+6. Đặt tiêu đề ngắn gọn bằng tiếng Việt + tiếng Anh (ví dụ: "Unit 5: Video Games").`;
+
+        const parts = [{ text: prompt }];
+        base64Images.forEach(img => {
+          parts.push({
+            inlineData: {
+              mimeType: img.mimeType,
+              data: img.data
+            }
+          });
+        });
+
+        const payload = {
+          contents: [{ role: "user", parts }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                title: { type: "STRING" },
+                paragraphs: {
+                  type: "ARRAY",
+                  items: { type: "STRING" }
+                },
+                keywords: {
+                  type: "ARRAY",
+                  items: { type: "STRING" }
+                }
+              },
+              required: ["title", "paragraphs", "keywords"]
+            }
+          }
+        };
+
+        const result = await callGeminiWithRetry(payload);
+        const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawJson) throw new Error("EMPTY_OCR");
+
+        const parsed = JSON.parse(rawJson);
+        const cleanedParagraphs = (parsed.paragraphs || [])
+          .map(p => p.trim())
+          .filter(p => p.length > 0);
+
+        if (cleanedParagraphs.length === 0) {
+          throw new Error("NO_TEXT");
+        }
+
+        const newLesson = {
+          id: "lesson-" + Date.now(),
+          title: customTitle || parsed.title || `Bài học mới (${new Date().toLocaleDateString("vi-VN")})`,
+          isSample: false,
+          mediaUrl,
+          timestamps: cleanedParagraphs.map(() => ({ start: 0, end: null })),
+          keywords: parsed.keywords || [],
+          paragraphs: cleanedParagraphs
+        };
+
+        state.lessons.splice(1, 0, newLesson);
+        state.currentLessonId = newLesson.id;
+        state.scope = "0";
+        state.mainView = "practice";
+        state.localBlobUrl = null;
+        saveLessonsToStorage();
+        setupMediaPlayerForCurrentLesson();
+        generateExercise();
+
+        if ((state.settings.googleScriptUrl || "").trim()) {
+          pushToGoogleSheets("saveLesson", newLesson);
+        }
+
+        showToast(`Đã tạo bài tập thành công (${cleanedParagraphs.length} đoạn văn)!`, "success");
+      } catch (err) {
+        if (err.message === "MISSING_API_KEY") {
+          showToast("Bạn chưa nhập Gemini API Key! Hãy vào tab 'Cài đặt & Sync' để dán mã nhé.", "error");
+          state.mainView = "settings";
+          renderAll();
+        } else {
+          showToast("Không thể đọc ảnh trang sách. Hãy chụp rõ nét hơn hoặc dùng nút 'Sửa bài / Link'.", "error");
+        }
+      } finally {
+        overlay.classList.add("hidden");
+        state.pendingBookFiles = [];
+        document.getElementById("multiBookImagesInput").value = "";
+      }
+    }
+
+    // Chấm bài viết tay trên vở (Hỗ trợ 1 hoặc nhiều ảnh trang vở)
+    async function handleNotebookImagesUpload(fileList) {
+      const files = Array.from(fileList || []);
+      if (files.length === 0) return;
+
+      const gradingArea = document.getElementById("notebookGradingArea");
+      const loadingBox = document.getElementById("notebookLoading");
+      const resultBox = document.getElementById("notebookResultBox");
+      const gallery = document.getElementById("notebookPreviewGallery");
+
+      gradingArea.classList.remove("hidden");
+      loadingBox.classList.remove("hidden");
+      resultBox.classList.add("hidden");
+
+      try {
+        const base64Images = await Promise.all(files.map(f => fileToBase64(f)));
+
+        gallery.innerHTML = base64Images.map((img, i) => `
+          <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+            <img src="${img.dataUrl}" alt="Trang vở ${i + 1}" class="w-full h-auto max-h-72 object-contain mx-auto" />
+          </div>
+        `).join("");
+
+        const answerKeyPayload = state.blanks.map(b => ({
+          number: b.index,
+          expectedAnswer: b.answer
+        }));
+
+        const prompt = `Bạn là giáo viên tiếng Anh lớp 6 tận tâm đang chấm bài luyện nghe chép chính tả viết tay trên vở của học sinh (gồm ${base64Images.length} ảnh trang vở).
+Dưới đây là danh sách đáp án chuẩn theo đúng số thứ tự (1), (2), (3)...:
+${JSON.stringify(answerKeyPayload, null, 2)}
+
+Hãy đọc toàn bộ các trang vở viết tay của học sinh và thực hiện:
+1. Đọc chữ viết tay tương ứng với từng số thứ tự (1), (2), (3)... Nếu học sinh bỏ trống hoặc không tìm thấy số đó trên vở, ghi studentWritten là "(Bỏ trống)".
+2. So sánh chữ học sinh viết với expectedAnswer:
+   - Không phân biệt chữ viết hoa/thường đầu từ và dấu câu nhỏ.
+   - Bắt lỗi chính tả nghiêm túc (ví dụ: thiếu chữ cái, sai chữ cái, thiếu đuôi -s/-es/-ed/-ing, sai từ).
+3. Với mỗi câu, trả về isCorrect (true/false) và explanation bằng tiếng Việt ngắn gọn, dễ hiểu cho học sinh lớp 6.
+4. Viết một lời nhận xét tổng kết (overallFeedback) bằng tiếng Việt khích lệ, ấm áp và nêu điểm cần lưu ý.`;
+
+        const parts = [{ text: prompt }];
+        base64Images.forEach(img => {
+          parts.push({
+            inlineData: {
+              mimeType: img.mimeType,
+              data: img.data
+            }
+          });
+        });
+
+        const payload = {
+          contents: [{ role: "user", parts }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                overallFeedback: { type: "STRING" },
+                items: {
+                  type: "ARRAY",
+                  items: {
+                    type: "OBJECT",
+                    properties: {
+                      number: { type: "INTEGER" },
+                      expectedAnswer: { type: "STRING" },
+                      studentWritten: { type: "STRING" },
+                      isCorrect: { type: "BOOLEAN" },
+                      explanation: { type: "STRING" }
+                    },
+                    required: ["number", "expectedAnswer", "studentWritten", "isCorrect", "explanation"]
+                  }
+                }
+              },
+              required: ["overallFeedback", "items"]
+            }
+          }
+        };
+
+        const result = await callGeminiWithRetry(payload);
+        const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawJson) throw new Error("EMPTY_GRADE");
+
+        const parsed = JSON.parse(rawJson);
+        await renderNotebookGradingResult(parsed);
+        showToast("Đã chấm xong và lưu điểm vào biểu đồ tiến bộ!", "success");
+      } catch (err) {
+        gradingArea.classList.add("hidden");
+        if (err.message === "MISSING_API_KEY") {
+          showToast("Bạn chưa nhập Gemini API Key! Hãy vào tab 'Cài đặt & Sync' để dán mã nhé.", "error");
+          state.mainView = "settings";
+          renderAll();
+        } else {
+          showToast("Chưa đọc được ảnh trang vở. Bạn hãy chụp rõ chữ và đủ ánh sáng hơn nhé!", "error");
+        }
+      } finally {
+        loadingBox.classList.add("hidden");
+        document.getElementById("notebookImageInput").value = "";
+      }
+    }
+
+    async function renderNotebookGradingResult(data) {
+      const items = data.items || [];
+      const total = state.blanks.length;
+      let correctCount = 0;
+      const wrongWords = [];
+
+      const rowsHtml = state.blanks.map(b => {
+        const found = items.find(it => it.number === b.index) || {
+          number: b.index,
+          expectedAnswer: b.answer,
+          studentWritten: "(Không nhận diện được)",
+          isCorrect: false,
+          explanation: "Không thấy câu trả lời trên ảnh"
+        };
+
+        if (found.isCorrect) {
+          correctCount++;
+        } else {
+          wrongWords.push(b.answer);
+        }
+
+        return `
+          <tr class="${found.isCorrect ? "bg-emerald-50/30" : "bg-rose-50/40"}">
+            <td class="py-3 px-3 text-center font-extrabold text-brand-700">(${b.index})</td>
+            <td class="py-3 px-3 font-bold text-slate-900">${escapeHtml(b.answer)}</td>
+            <td class="py-3 px-3 font-semibold ${found.isCorrect ? "text-emerald-700" : "text-rose-700"}">
+              ${escapeHtml(found.studentWritten)}
+            </td>
+            <td class="py-3 px-3 text-xs sm:text-sm">
+              ${
+                found.isCorrect
+                  ? `<span class="inline-flex items-center gap-1 font-bold text-emerald-700"><i class="fa-solid fa-circle-check"></i> Đúng</span>`
+                  : `<div class="space-y-0.5">
+                      <span class="inline-flex items-center gap-1 font-bold text-rose-700"><i class="fa-solid fa-circle-xmark"></i> Cần sửa</span>
+                      <p class="text-slate-600 text-xs">${escapeHtml(found.explanation)}</p>
+                    </div>`
+              }
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      document.getElementById("scoreFraction").textContent = `${correctCount}/${total}`;
+      document.getElementById("scorePercentLabel").textContent = `Đạt ${percent}% chính xác`;
+      document.getElementById("aiFeedbackText").textContent = data.overallFeedback || "Con đã rất cố gắng hoàn thành bài luyện nghe!";
+
+      const scoreCircle = document.getElementById("scoreCircle");
+      if (percent >= 80) {
+        scoreCircle.className = "w-20 h-20 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center shrink-0 shadow-sm";
+      } else if (percent >= 50) {
+        scoreCircle.className = "w-20 h-20 rounded-2xl bg-amber-500 text-white flex flex-col items-center justify-center shrink-0 shadow-sm";
+      } else {
+        scoreCircle.className = "w-20 h-20 rounded-2xl bg-rose-600 text-white flex flex-col items-center justify-center shrink-0 shadow-sm";
+      }
+
+      document.getElementById("gradingTableBody").innerHTML = rowsHtml;
+      document.getElementById("notebookResultBox").classList.remove("hidden");
+
+      await recordPracticeResult(correctCount, total, wrongWords);
+    }
+
+    // =========================================================================
+    // 10. CHẤM BÀI GÕ TRỰC TIẾP TRÊN MÀN HÌNH
+    // =========================================================================
+    function normalizeText(str) {
+      return (str || "")
+        .toLowerCase()
+        .replace(/[’']/g, "'")
+        .replace(/[.,!?;:"()\-]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    async function checkTypingAnswers() {
+      let correctCount = 0;
+      const wrongWords = [];
+
+      state.blanks.forEach(b => {
+        const inputEl = document.querySelector(`.inline-input[data-blank-index="${b.index}"]`);
+        const fbEl = document.getElementById(`feedback-inline-${b.index}`);
+        if (!inputEl || !fbEl) return;
+
+        const userNorm = normalizeText(inputEl.value);
+        const ansNorm = normalizeText(b.answer);
+
+        inputEl.classList.remove("correct", "incorrect");
+        if (userNorm !== "" && userNorm === ansNorm) {
+          correctCount++;
+          inputEl.classList.add("correct");
+          fbEl.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i>`;
+        } else {
+          wrongWords.push(b.answer);
+          inputEl.classList.add("incorrect");
+          fbEl.innerHTML = `<span class="text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded">→ ${escapeHtml(b.answer)}</span>`;
+        }
+      });
+
+      const total = state.blanks.length;
+      const banner = document.getElementById("typingScoreBanner");
+      banner.classList.remove("hidden");
+
+      if (correctCount === total) {
+        banner.className = "rounded-2xl p-4 border border-emerald-200 bg-emerald-50 text-emerald-900 text-sm font-bold flex items-center justify-between";
+        banner.innerHTML = `<span><i class="fa-solid fa-trophy text-emerald-600 mr-2"></i>Xuất sắc! Con làm đúng tuyệt đối ${correctCount}/${total} chỗ trống! Đã lưu vào biểu đồ tiến bộ.</span>`;
+      } else {
+        banner.className = "rounded-2xl p-4 border border-amber-200 bg-amber-50 text-amber-900 text-sm font-bold flex items-center justify-between";
+        banner.innerHTML = `<span><i class="fa-solid fa-star text-amber-500 mr-2"></i>Con đúng ${correctCount}/${total} chỗ trống. Các ô màu đỏ đã hiện đáp án đúng bên cạnh để con sửa lại nhé!</span>`;
+      }
+
+      await recordPracticeResult(correctCount, total, wrongWords);
+      showToast("Đã lưu điểm số vào biểu đồ tiến bộ!", "success");
+    }
+
+    function resetTypingAnswers() {
+      state.blanks.forEach(b => {
+        b.userValue = "";
+      });
+      document.getElementById("typingScoreBanner").classList.add("hidden");
+      renderPassage();
+    }
+
+    function createReviewLessonFromMissedWords() {
+      const uniqueWrong = new Set();
+      state.results.forEach(r => {
+        (r.wrongWords || []).forEach(w => {
+          const clean = String(w).trim();
+          if (clean) uniqueWrong.add(clean);
+        });
+      });
+
+      const wordsArr = Array.from(uniqueWrong);
+      if (wordsArr.length === 0) return;
+
+      const reviewParagraph = wordsArr
+        .map((w, idx) => `Item ${idx + 1}: Please spell "${w}" carefully.`)
+        .join(" ");
+
+      const reviewLesson = {
+        id: "review-" + Date.now(),
+        title: `Ôn tập từ hay viết sai (${wordsArr.length} từ)`,
+        isSample: false,
+        mediaUrl: "",
+        timestamps: [{ start: 0, end: null }],
+        keywords: wordsArr,
+        paragraphs: [reviewParagraph]
+      };
+
+      state.lessons.splice(1, 0, reviewLesson);
+      state.currentLessonId = reviewLesson.id;
+      state.scope = "0";
+      state.mode = "word";
+      state.density = "high";
+      state.mainView = "practice";
+      saveLessonsToStorage();
+      setupMediaPlayerForCurrentLesson();
+      generateExercise();
+      showToast("Đã tạo bài ôn tập riêng cho các từ con hay viết nhầm!", "success");
+    }
+
+    // =========================================================================
+    // 11. MODAL SỬA / DÁN VĂN BẢN THỦ CÔNG & TIỆN ÍCH
+    // =========================================================================
+    function openManualModal(createNew = false) {
+      state.isManualCreatingNew = createNew;
+      const modal = document.getElementById("manualModal");
+      const titleInput = document.getElementById("manualTitleInput");
+      const mediaInput = document.getElementById("manualMediaUrlInput");
+      const contentInput = document.getElementById("manualContentInput");
+
+      if (createNew) {
+        titleInput.value = "";
+        mediaInput.value = "";
+        contentInput.value = "";
+      } else {
+        const current = getCurrentLesson();
+        titleInput.value = current.isSample ? `${current.title} (Bản sao)` : current.title;
+        mediaInput.value = current.mediaUrl || "";
+        contentInput.value = current.paragraphs.join("\n\n");
+      }
+      modal.classList.remove("hidden");
+    }
+
+    function closeManualModal() {
+      document.getElementById("manualModal").classList.add("hidden");
+    }
+
+    function saveManualLesson() {
+      const title = document.getElementById("manualTitleInput").value.trim() || "Bài luyện nghe tự nhập";
+      const mediaUrl = document.getElementById("manualMediaUrlInput").value.trim();
+      const rawText = document.getElementById("manualContentInput").value.trim();
+
+      const paragraphs = rawText
+        .split(/\n\s*\n+/)
+        .map(p => p.replace(/\s+/g, " ").trim())
+        .filter(p => p.length > 0);
+
+      if (paragraphs.length === 0) {
+        showToast("Vui lòng nhập ít nhất 1 đoạn văn tiếng Anh.", "error");
+        return;
+      }
+
+      const current = getCurrentLesson();
+      let savedLesson = null;
+      if (!state.isManualCreatingNew && !current.isSample) {
+        current.title = title;
+        current.mediaUrl = mediaUrl;
+        current.paragraphs = paragraphs;
+        if (!Array.isArray(current.timestamps)) current.timestamps = [];
+        while (current.timestamps.length < paragraphs.length) {
+          current.timestamps.push({ start: 0, end: null });
+        }
+        savedLesson = current;
+      } else {
+        savedLesson = {
+          id: "lesson-" + Date.now(),
+          title,
+          isSample: false,
+          mediaUrl,
+          timestamps: paragraphs.map(() => ({ start: 0, end: null })),
+          keywords: [],
+          paragraphs
+        };
+        state.lessons.splice(1, 0, savedLesson);
+        state.currentLessonId = savedLesson.id;
+      }
+
+      state.scope = "0";
+      state.localBlobUrl = null;
+      saveLessonsToStorage();
+      if ((state.settings.googleScriptUrl || "").trim() && savedLesson) {
+        pushToGoogleSheets("saveLesson", savedLesson);
+      }
+
+      closeManualModal();
+      setupMediaPlayerForCurrentLesson();
+      generateExercise();
+      showToast("Đã cập nhật bài học & Link Video thành công!", "success");
+    }
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+
+      const colorClasses =
+        type === "success"
+          ? "bg-emerald-700 text-white border-emerald-800"
+          : type === "error"
+          ? "bg-rose-700 text-white border-rose-800"
+          : "bg-slate-800 text-white border-slate-900";
+
+      const icon =
+        type === "success"
+          ? "fa-circle-check"
+          : type === "error"
+          ? "fa-circle-exclamation"
+          : "fa-circle-info";
+
+      toast.className = `${colorClasses} pointer-events-auto border rounded-2xl px-4 py-3 shadow-lg text-xs sm:text-sm font-semibold flex items-start gap-2.5 transition-all duration-300`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} mt-0.5 text-base shrink-0"></i>
+        <span class="leading-snug">${escapeHtml(message)}</span>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(-6px)";
+        setTimeout(() => toast.remove(), 300);
+      }, 4200);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // =========================================================================
+    // 12. KHỞI CHẠY & GẮN SỰ KIỆN
+    // =========================================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAllFromStorage();
+      setupMediaPlayerForCurrentLesson();
+      generateExercise();
+
+      if ((state.settings.googleScriptUrl || "").trim()) {
+        pullFromGoogleSheets(true);
+      }
+
+      // Điều hướng 3 Tab chính
+      document.getElementById("navPracticeBtn").addEventListener("click", () => {
+        state.mainView = "practice";
+        renderAll();
+      });
+      document.getElementById("navProgressBtn").addEventListener("click", () => {
+        state.mainView = "progress";
+        renderAll();
+      });
+      document.getElementById("navSettingsBtn").addEventListener("click", () => {
+        state.mainView = "settings";
+        renderAll();
+      });
+
+      // Chọn bài học từ dropdown
+      document.getElementById("lessonSelect").addEventListener("change", e => {
+        state.currentLessonId = e.target.value;
+        state.scope = "0";
+        state.localBlobUrl = null;
+        setupMediaPlayerForCurrentLesson();
+        generateExercise();
+      });
+
+      // Xóa bài học tùy chỉnh
+      document.getElementById("deleteLessonBtn").addEventListener("click", () => {
+        const current = getCurrentLesson();
+        if (current.isSample) return;
+        state.lessons = state.lessons.filter(l => l.id !== current.id);
+        state.currentLessonId = SAMPLE_LESSON.id;
+        state.scope = "0";
+        state.localBlobUrl = null;
+        saveLessonsToStorage();
+        setupMediaPlayerForCurrentLesson();
+        generateExercise();
+        showToast("Đã xóa bài học khỏi danh sách.", "info");
+      });
+
+      // Chọn đoạn văn
+      document.getElementById("scopePills").addEventListener("click", e => {
+        const btn = e.target.closest(".scope-pill");
+        if (!btn) return;
+        state.scope = btn.dataset.scope;
+        stopSegmentLoopTimer();
+        generateExercise();
+      });
+
+      // Chọn chế độ khuyết
+      document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.mode = btn.dataset.mode;
+          generateExercise();
+        });
+      });
+
+      // Chọn mật độ
+      document.querySelectorAll(".density-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.density = btn.dataset.density;
+          generateExercise();
+        });
+      });
+
+      // Bật/tắt gợi ý số chữ cái
+      document.getElementById("showLetterCountToggle").addEventListener("change", e => {
+        state.showLetterCount = e.target.checked;
+        renderPassage();
+      });
+
+      // Tạo đề ngẫu nhiên khác
+      document.getElementById("regenerateBtn").addEventListener("click", () => {
+        generateExercise();
+        showToast("Đã tạo bộ ô trống mới!", "info");
+      });
+
+      // Ẩn/hiện từ gợi ý
+      document.getElementById("toggleWordBankBtn").addEventListener("click", () => {
+        state.showWordBank = !state.showWordBank;
+        renderWordBank();
+      });
+
+      // Ẩn/hiện đáp án gốc
+      document.getElementById("toggleShowAnswersBtn").addEventListener("click", () => {
+        state.showAnswers = !state.showAnswers;
+        renderAnswerKey();
+      });
+
+      // Chuyển Tab con chấm bài
+      document.getElementById("tabNotebookBtn").addEventListener("click", () => {
+        state.activeTab = "notebook";
+        renderAll();
+      });
+      document.getElementById("tabTypingBtn").addEventListener("click", () => {
+        state.activeTab = "typing";
+        renderAll();
+      });
+
+      // Sự kiện Trình phát Media & Mốc thời gian
+      document.getElementById("toggleMediaUrlBarBtn").addEventListener("click", () => {
+        document.getElementById("mediaUrlBar").classList.toggle("hidden");
+      });
+
+      document.getElementById("saveInlineMediaUrlBtn").addEventListener("click", () => {
+        const url = document.getElementById("inlineMediaUrlInput").value.trim();
+        const lesson = getCurrentLesson();
+        if (lesson) {
+          lesson.mediaUrl = url;
+          state.localBlobUrl = null;
+          if (!lesson.isSample) {
+            saveLessonsToStorage();
+            if ((state.settings.googleScriptUrl || "").trim()) {
+              pushToGoogleSheets("saveLesson", lesson);
+            }
+          }
+          setupMediaPlayerForCurrentLesson();
+          document.getElementById("mediaUrlBar").classList.add("hidden");
+          showToast("Đã cập nhật Link Video/Audio cho bài học!", "success");
+        }
+      });
+
+      document.getElementById("localMediaFileInput").addEventListener("change", e => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (state.localBlobUrl) URL.revokeObjectURL(state.localBlobUrl);
+        state.localBlobUrl = URL.createObjectURL(file);
+        setupMediaPlayerForCurrentLesson();
+        document.getElementById("mediaUrlBar").classList.add("hidden");
+        showToast(`Đã nạp file "${file.name}" vào trình phát!`, "success");
+      });
+
+      document.getElementById("playSegmentBtn").addEventListener("click", playCurrentSegment);
+
+      document.getElementById("loopSegmentBtn").addEventListener("click", () => {
+        state.isLoopingSegment = !state.isLoopingSegment;
+        if (!state.isLoopingSegment) {
+          stopSegmentLoopTimer();
+        }
+        renderPlayerControlsUI();
+      });
+
+      document.getElementById("rewind5sBtn").addEventListener("click", () => {
+        const cur = getCurrentMediaTime();
+        seekAndPlayMedia(Math.max(0, cur - 5));
+      });
+
+      document.querySelectorAll(".rate-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          applyPlaybackRate(parseFloat(btn.dataset.rate));
+        });
+      });
+
+      document.getElementById("captureStartBtn").addEventListener("click", () => {
+        const cur = Math.floor(getCurrentMediaTime());
+        updateSegmentTimestamp("start", cur);
+        showToast(`Đã chốt mốc bắt đầu: ${formatSecondsToMMSS(cur)}`, "success");
+      });
+
+      document.getElementById("captureEndBtn").addEventListener("click", () => {
+        const cur = Math.ceil(getCurrentMediaTime());
+        updateSegmentTimestamp("end", cur);
+        showToast(`Đã chốt mốc kết thúc: ${formatSecondsToMMSS(cur)}`, "success");
+      });
+
+      document.getElementById("segStartInput").addEventListener("change", e => {
+        const sec = parseMMSSToSeconds(e.target.value);
+        updateSegmentTimestamp("start", sec !== null ? sec : 0);
+      });
+
+      document.getElementById("segEndInput").addEventListener("change", e => {
+        const sec = parseMMSSToSeconds(e.target.value);
+        updateSegmentTimestamp("end", sec);
+      });
+
+      // Modal Tạo bài mới từ nhiều ảnh sách + Quét QR
+      document.getElementById("openCreateFromImagesBtn").addEventListener("click", () => {
+        state.pendingBookFiles = [];
+        document.getElementById("selectedBookImagesGrid").classList.add("hidden");
+        document.getElementById("selectedBookImagesGrid").innerHTML = "";
+        document.getElementById("newLessonMediaUrlInput").value = "";
+        document.getElementById("newLessonTitleInput").value = "";
+        document.getElementById("qrScanStatusBadge").textContent = "Chưa chọn ảnh";
+        document.getElementById("qrScanStatusBadge").className = "text-xs font-bold text-slate-400";
+        document.getElementById("createImagesModal").classList.remove("hidden");
+      });
+
+      document.getElementById("closeCreateImagesModalBtn").addEventListener("click", () => {
+        document.getElementById("createImagesModal").classList.add("hidden");
+      });
+      document.getElementById("cancelCreateImagesModalBtn").addEventListener("click", () => {
+        document.getElementById("createImagesModal").classList.add("hidden");
+      });
+
+      document.getElementById("multiBookImagesInput").addEventListener("change", e => {
+        handleSelectedBookImages(e.target.files);
+      });
+
+      document.getElementById("submitCreateFromImagesBtn").addEventListener("click", submitCreateLessonFromImages);
+
+      // Upload 1 hoặc nhiều ảnh trang vở viết tay để AI chấm
+      document.getElementById("notebookImageInput").addEventListener("change", e => {
+        handleNotebookImagesUpload(e.target.files);
+      });
+
+      // Kiểm tra & làm lại chế độ gõ trực tiếp
+      document.getElementById("checkTypingBtn").addEventListener("click", checkTypingAnswers);
+      document.getElementById("resetTypingBtn").addEventListener("click", resetTypingAnswers);
+
+      // View Tiến bộ: Đồng bộ Google Sheets, Luyện từ sai, Xóa lịch sử cục bộ
+      document.getElementById("syncFromSheetsBtn").addEventListener("click", () => pullFromGoogleSheets(false));
+      document.getElementById("practiceMissedWordsBtn").addEventListener("click", createReviewLessonFromMissedWords);
+      document.getElementById("clearLocalHistoryBtn").addEventListener("click", () => {
+        state.results = [];
+        saveResultsToStorage();
+        renderProgressView();
+        showToast("Đã xóa lịch sử lưu trên trình duyệt này.", "info");
+      });
+
+      // View Cài đặt: Hiện/ẩn API Key, Sao chép mã Apps Script, Kiểm tra & Lưu cấu hình
+      document.getElementById("toggleApiKeyVisBtn").addEventListener("click", () => {
+        const inp = document.getElementById("geminiApiKeyInput");
+        inp.type = inp.type === "password" ? "text" : "password";
+      });
+
+      document.getElementById("copyAppsScriptBtn").addEventListener("click", () => {
+        const codeText = document.getElementById("appsScriptCodeBlock").textContent;
+        const tempArea = document.createElement("textarea");
+        tempArea.value = codeText;
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempArea);
+        showToast("Đã sao chép mã Google Apps Script vào bộ nhớ tạm!", "success");
+      });
+
+      document.getElementById("testSheetsSyncBtn").addEventListener("click", async () => {
+        const url = document.getElementById("googleScriptUrlInput").value.trim();
+        if (!url) {
+          showToast("Vui lòng dán đường link Google Apps Script URL trước.", "error");
+          return;
+        }
+        state.settings.googleScriptUrl = url;
+        saveSettingsToStorage();
+        await pullFromGoogleSheets(false);
+      });
+
+      document.getElementById("saveSettingsBtn").addEventListener("click", () => {
+        state.settings.geminiApiKey = document.getElementById("geminiApiKeyInput").value.trim();
+        state.settings.googleScriptUrl = document.getElementById("googleScriptUrlInput").value.trim();
+        saveSettingsToStorage();
+        renderSyncBadge();
+        showToast("Đã lưu cấu hình Gemini API Key và Google Sheets!", "success");
+      });
+
+      // Modal sửa / dán bài thủ công
+      document.getElementById("openManualModalBtn").addEventListener("click", () => openManualModal(false));
+      document.getElementById("newBlankLessonBtn").addEventListener("click", () => openManualModal(true));
+      document.getElementById("closeManualModalBtn").addEventListener("click", closeManualModal);
+      document.getElementById("cancelManualModalBtn").addEventListener("click", closeManualModal);
+      document.getElementById("saveManualLessonBtn").addEventListener("click", saveManualLesson);
+    });
+  </script>
+</body>
+</html>
